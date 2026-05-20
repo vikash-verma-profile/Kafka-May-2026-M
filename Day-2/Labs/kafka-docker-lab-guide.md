@@ -4,6 +4,8 @@ Run Kafka in **Docker** and use the **same CLI workflow** as the local Windows i
 
 **Local Windows install guide:** [kafka-kraft-setup-windows.md](./kafka-kraft-setup-windows.md)
 
+**Multi-broker CLI lab (3 brokers, multiple producers/consumers):** [kafka-multi-broker-cli-lab.md](./kafka-multi-broker-cli-lab.md)
+
 ---
 
 ## 1. What you get

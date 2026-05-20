@@ -6,6 +6,10 @@
 
 **Alternative — Kafka in Docker (same CLI lab):** [kafka-docker-lab-guide.md](./kafka-docker-lab-guide.md)
 
+**Multi-broker local (3 brokers, CLI):** [kafka-local-multi-broker-cli-lab.md](./kafka-local-multi-broker-cli-lab.md)
+
+**Full architecture (infra + diagrams):** [kafka-architecture-guide.md](./kafka-architecture-guide.md)
+
 Use **3 terminals** for the full lab. Every command below is copy-paste ready.
 
 ---
@@ -428,3 +432,23 @@ kafka-cli.bat console-producer --bootstrap-server localhost:9092 --topic lab-mes
 ```
 
 Stop local Kafka first if port 9092 is already in use.
+
+---
+
+# Part 10 — Multi-broker local cluster (3 brokers, CLI)
+
+Same scenarios as Docker multi-broker lab, using `C:\kafka-bin\kafka_2.13-4.2.0`.
+
+**Full guide:** [kafka-local-multi-broker-cli-lab.md](./kafka-local-multi-broker-cli-lab.md)
+
+```bat
+cd C:\Users\om\Desktop\KafKa\Day-2\Labs\kafka-local-3brokers\scripts
+setup-cluster.bat
+```
+
+Start `start-broker1.bat`, `start-broker2.bat`, `start-broker3.bat` in 3 terminals.
+
+```bat
+set BS=localhost:9092,localhost:9094,localhost:9095
+bin\windows\kafka-console-producer.bat --bootstrap-server %BS% --topic scenario2-topic
+```

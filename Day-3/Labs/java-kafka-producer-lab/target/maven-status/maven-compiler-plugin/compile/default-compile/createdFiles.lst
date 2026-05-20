@@ -1,0 +1,10 @@
+com\kafka\producer\lab\KeyedProducer.class
+com\kafka\producer\lab\AcksProducer.class
+com\kafka\producer\lab\JsonOrderProducer.class
+com\kafka\producer\lab\MultiPartitionProducer.class
+com\kafka\producer\lab\IdempotentProducer.class
+com\kafka\producer\lab\RoundRobinProducer.class
+com\kafka\producer\lab\PerformanceTunedProducer.class
+com\kafka\producer\lab\BasicProducer.class
+com\kafka\producer\lab\RetriesProducer.class
+com\kafka\producer\lab\ProducerConfigFactory.class
