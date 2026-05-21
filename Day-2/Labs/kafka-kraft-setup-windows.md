@@ -1,10 +1,10 @@
-# Kafka on Windows — Lab guide (Kafka 4.2)
+# Kafka on Windows -Lab guide (Kafka 4.2)
 
 **Install path:** `C:\kafka-bin\kafka_2.13-4.2.0`  
 **Config file:** `config\server.properties` (not `config\kraft\server.properties`)  
 **Scripts folder:** `bin\windows\` (not `bin\`)
 
-**Alternative — Kafka in Docker (same CLI lab):** [kafka-docker-lab-guide.md](./kafka-docker-lab-guide.md)
+**Alternative -Kafka in Docker (same CLI lab):** [kafka-docker-lab-guide.md](./kafka-docker-lab-guide.md)
 
 **Multi-broker local (3 brokers, CLI):** [kafka-local-multi-broker-cli-lab.md](./kafka-local-multi-broker-cli-lab.md)
 
@@ -315,7 +315,7 @@ Type a message → read it in Terminal 3.
 
 ---
 
-# Part 6 — Java client lab
+# Part 6 -Java client lab
 
 Maven project: **`kafka-java-lab/`** (must run Maven **inside** that folder, or use the helper scripts from Labs).
 
@@ -326,23 +326,23 @@ cd C:\Users\om\Desktop\KafKa\Day-2\Labs\kafka-java-lab
 mvn -q compile
 ```
 
-**Option A — from `kafka-java-lab` folder**
+**Option A -from `kafka-java-lab` folder**
 
-**Terminal A — consumer**
+**Terminal A -consumer**
 
 ```bat
 cd C:\Users\om\Desktop\KafKa\Day-2\Labs\kafka-java-lab
 mvn -q exec:java -Dexec.mainClass=com.kafka.lab.SimpleConsumer
 ```
 
-**Terminal B — producer**
+**Terminal B -producer**
 
 ```bat
 cd C:\Users\om\Desktop\KafKa\Day-2\Labs\kafka-java-lab
 mvn -q exec:java -Dexec.mainClass=com.kafka.lab.SimpleProducer
 ```
 
-**Option B — from `Labs` folder (helper scripts)**
+**Option B -from `Labs` folder (helper scripts)**
 
 ```bat
 cd C:\Users\om\Desktop\KafKa\Day-2\Labs
@@ -358,7 +358,7 @@ See **`kafka-java-lab-guide.md`** for full create/run/troubleshooting details.
 
 ---
 
-# Part 7 — Python client lab
+# Part 7 -Python client lab
 
 Maven-style guide: **`kafka-python-lab-guide.md`**
 
@@ -386,7 +386,7 @@ Or from `Labs`: `run-python-consumer.bat` then `run-python-producer.bat`
 
 ---
 
-# Part 8 — .NET client lab
+# Part 8 -.NET client lab
 
 Full guide: **`kafka-dotnet-lab-guide.md`**
 
@@ -413,7 +413,7 @@ Or from `Labs`: `run-dotnet-consumer.bat` then `run-dotnet-producer.bat`
 
 ---
 
-# Part 9 — Kafka on Docker (alternative to local install)
+# Part 9 -Kafka on Docker (alternative to local install)
 
 Same CLI producer/consumer lab, broker in a container on `localhost:9092`.
 
@@ -435,7 +435,7 @@ Stop local Kafka first if port 9092 is already in use.
 
 ---
 
-# Part 10 — Multi-broker local cluster (3 brokers, CLI)
+# Part 10 -Multi-broker local cluster (3 brokers, CLI)
 
 Same scenarios as Docker multi-broker lab, using `C:\kafka-bin\kafka_2.13-4.2.0`.
 

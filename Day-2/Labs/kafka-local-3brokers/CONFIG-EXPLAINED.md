@@ -1,4 +1,4 @@
-# Kafka Local 3-Broker Config — Explained & Changes
+# Kafka Local 3-Broker Config -Explained & Changes
 
 This folder (`kafka-local-3brokers/config/`) uses a **combined KRaft** design: each node is **both broker and controller**. There is **no** separate `controller.properties` file here.
 
@@ -19,7 +19,7 @@ Your **muti-broker / kafka-bin** lab uses a **different** design: one dedicated 
 
 ---
 
-## 2. `broker1.properties` — line-by-line
+## 2. `broker1.properties` -line-by-line
 
 File: `kafka-local-3brokers/config/broker1.properties`
 
@@ -54,7 +54,7 @@ A 3-node static cluster uses **voters** (fixed membership). Bootstrap is typical
 |----------|--------|---------|
 | `log.dirs` | `C:/kafka-data/multi-broker-1` | Topic data and local metadata for **node 1** only. Each broker has its own folder. |
 
-**Changed from default:** Default `server.properties` used `/tmp/kraft-combined-logs` or a single path — we use a **dedicated Windows path per node**.
+**Changed from default:** Default `server.properties` used `/tmp/kraft-combined-logs` or a single path -we use a **dedicated Windows path per node**.
 
 ### Replication (multi-broker lab)
 
@@ -85,11 +85,11 @@ Same `controller.quorum.voters` line on all three files.
 localhost:9092,localhost:9094,localhost:9095
 ```
 
-Do **not** use 9093, 9193, or 9293 in `--bootstrap-server` — those are controller ports.
+Do **not** use 9093, 9193, or 9293 in `--bootstrap-server` -those are controller ports.
 
 ---
 
-## 3. `controller.properties` — separate-file model (kafka-bin)
+## 3. `controller.properties` -separate-file model (kafka-bin)
 
 There is **no** `controller.properties` under `kafka-local-3brokers/config/`.  
 For the **muti-broker** lab, the controller lives here:
@@ -102,10 +102,10 @@ C:\kafka-bin\kafka_2.13-4.2.0\config\controller.properties
 
 | Property | Typical value | Meaning |
 |----------|---------------|---------|
-| `process.roles` | `controller` | **Only** metadata/quorum — no topic produce/consume on this JVM. |
+| `process.roles` | `controller` | **Only** metadata/quorum -no topic produce/consume on this JVM. |
 | `node.id` | `1` | Controller node id (brokers use 2, 3, 4 in that lab). |
 | `controller.quorum.bootstrap.servers` | `localhost:9093` | How this controller finds/joins the quorum (dynamic style for a single controller). |
-| `listeners` | `CONTROLLER://:9093` | Listens **only** for KRaft — no PLAINTEXT client port. |
+| `listeners` | `CONTROLLER://:9093` | Listens **only** for KRaft -no PLAINTEXT client port. |
 | `advertised.listeners` | `CONTROLLER://localhost:9093` | Address brokers use to reach the controller. |
 | `log.dirs` | `C:/kafka-data/kraft-controller-logs` | Controller metadata only (not your topic messages). |
 
@@ -114,7 +114,7 @@ C:\kafka-bin\kafka_2.13-4.2.0\config\controller.properties
 | Property | Value | Meaning |
 |----------|--------|---------|
 | `process.roles` | `broker` | No controller work on this JVM. |
-| `node.id` | `2` | Broker id (not 1 — id 1 is the controller). |
+| `node.id` | `2` | Broker id (not 1 -id 1 is the controller). |
 | `controller.quorum.bootstrap.servers` | `localhost:9093` | “Register with controller at 9093.” |
 | `listeners` | `PLAINTEXT://localhost:9092` | Client port only. |
 | `log.dirs` | `C:/kafka-data/kraft-broker-logs-1` | Topic data for broker 1. |
@@ -183,7 +183,7 @@ bin\windows\kafka-server-start.bat ...\config\broker3.properties
 
 ---
 
-## 6. Diagram — combined mode (this folder)
+## 6. Diagram -combined mode (this folder)
 
 ```text
   Node 1 (broker1.properties)     Node 2 (broker2.properties)     Node 3 (broker3.properties)
@@ -196,7 +196,7 @@ bin\windows\kafka-server-start.bat ...\config\broker3.properties
                             one cluster (quorum voters)
 ```
 
-## Diagram — split mode (kafka-bin `controller.properties` + brokers)
+## Diagram -split mode (kafka-bin `controller.properties` + brokers)
 
 ```text
   controller.properties          broker-1.properties    broker-2.properties    broker-3.properties

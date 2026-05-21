@@ -1,4 +1,4 @@
-# Kafka Python Lab — Create, Build & Run Guide
+# Kafka Python Lab -Create, Build & Run Guide
 
 Python version of the Java lab: a **producer** sends messages to Kafka and a **consumer** prints them. Uses the same broker (`localhost:9092`) and topic (`lab-messages`).
 
@@ -26,7 +26,7 @@ Library: **[kafka-python](https://github.com/dpkp/kafka-python)** (pure Python, 
 | Requirement | How to check |
 |-------------|----------------|
 | **Python 3.9+** | `python --version` |
-| **Kafka running** | `localhost:9092` — [kafka-kraft-setup-windows.md](./kafka-kraft-setup-windows.md) |
+| **Kafka running** | `localhost:9092` -[kafka-kraft-setup-windows.md](./kafka-kraft-setup-windows.md) |
 | **Topic `lab-messages`** | Create once (see below) |
 
 ---
@@ -50,7 +50,7 @@ Day-2/Labs/
 
 ## 4. How this lab was created
 
-### Step 4.1 — Project folder
+### Step 4.1 -Project folder
 
 ```text
 kafka-python-lab/
@@ -60,7 +60,7 @@ kafka-python-lab/
   simple_consumer.py
 ```
 
-### Step 4.2 — `requirements.txt`
+### Step 4.2 -`requirements.txt`
 
 ```text
 kafka-python==2.0.2
@@ -68,7 +68,7 @@ kafka-python==2.0.2
 
 Install with: `pip install -r requirements.txt`
 
-### Step 4.3 — `config.py`
+### Step 4.3 -`config.py`
 
 Default values (same as Java lab):
 
@@ -76,17 +76,17 @@ Default values (same as Java lab):
 - Topic: `lab-messages`
 - Consumer group: `python-lab-group`
 
-### Step 4.4 — `simple_producer.py`
+### Step 4.4 -`simple_producer.py`
 
 1. Creates `KafkaProducer` with UTF-8 value serializer  
 2. Sends `"Hello from Python producer - message N"`  
 3. Waits for each send with `future.get()` (like Java callback)  
 4. Prints partition and offset  
 
-### Step 4.5 — `simple_consumer.py`
+### Step 4.5 -`simple_consumer.py`
 
 1. Creates `KafkaConsumer` subscribed to `lab-messages`  
-2. `auto_offset_reset="earliest"` — read from start if no offset saved  
+2. `auto_offset_reset="earliest"` -read from start if no offset saved  
 3. Iterates `for message in consumer` and prints value, partition, offset  
 4. Stops on **Ctrl+C**  
 
@@ -94,7 +94,7 @@ Default values (same as Java lab):
 
 ## 5. One-time setup
 
-### Step 5.1 — Start Kafka (Terminal 1)
+### Step 5.1 -Start Kafka (Terminal 1)
 
 ```bat
 cd C:\kafka-bin\kafka_2.13-4.2.0
@@ -103,14 +103,14 @@ bin\windows\kafka-server-start.bat config\server.properties
 
 Wait for: `Kafka Server started`
 
-### Step 5.2 — Create topic (once)
+### Step 5.2 -Create topic (once)
 
 ```bat
 cd C:\kafka-bin\kafka_2.13-4.2.0
 bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --create --topic lab-messages --partitions 1 --replication-factor 1
 ```
 
-### Step 5.3 — Virtual environment and dependencies
+### Step 5.3 -Virtual environment and dependencies
 
 **Command 1**
 
@@ -138,9 +138,9 @@ Expected: installs `kafka-python` without errors.
 
 Use **3 terminals**: Kafka broker, consumer, producer.
 
-### Method A — From `kafka-python-lab` folder
+### Method A -From `kafka-python-lab` folder
 
-#### Terminal 2 — Consumer (start first)
+#### Terminal 2 -Consumer (start first)
 
 **Command 1**
 
@@ -160,7 +160,7 @@ cd C:\Users\om\Desktop\KafKa\Day-2\Labs\kafka-python-lab
 Connecting to localhost:9092, topic=lab-messages, group=python-lab-group (Ctrl+C to stop)
 ```
 
-#### Terminal 3 — Producer
+#### Terminal 3 -Producer
 
 **Command 1**
 
@@ -192,7 +192,7 @@ Received: "Hello from Python producer - message 1" | partition=0 offset=20 key=N
 
 ---
 
-### Method B — From `Labs` folder (helper scripts)
+### Method B -From `Labs` folder (helper scripts)
 
 After setup (Step 5.3), from `Labs`:
 
@@ -215,13 +215,13 @@ run-python-producer.bat
 python script.py [bootstrapServers] [topic] [extra]
 ```
 
-**Producer** — send 3 messages:
+**Producer** -send 3 messages:
 
 ```bat
 .venv\Scripts\python simple_producer.py localhost:9092 lab-messages 3
 ```
 
-**Consumer** — custom group id:
+**Consumer** -custom group id:
 
 ```bat
 .venv\Scripts\python simple_consumer.py localhost:9092 lab-messages my-group
@@ -270,7 +270,7 @@ You can run Java producer and Python consumer (or vice versa) on the same topic.
 
 ---
 
-## 11. Quick reference — copy/paste
+## 11. Quick reference -copy/paste
 
 **Setup (once)**
 

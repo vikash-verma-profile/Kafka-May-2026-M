@@ -1,0 +1,12 @@
+C:\Users\om\Desktop\KafKa\Day-4\labs\java-kafka-consumer-lab\src\main\java\com\kafka\consumer\lab\AssignmentLogger.java
+C:\Users\om\Desktop\KafKa\Day-4\labs\java-kafka-consumer-lab\src\main\java\com\kafka\consumer\lab\AutoCommitConsumer.java
+C:\Users\om\Desktop\KafKa\Day-4\labs\java-kafka-consumer-lab\src\main\java\com\kafka\consumer\lab\BasicConsumer.java
+C:\Users\om\Desktop\KafKa\Day-4\labs\java-kafka-consumer-lab\src\main\java\com\kafka\consumer\lab\CommitLabProducer.java
+C:\Users\om\Desktop\KafKa\Day-4\labs\java-kafka-consumer-lab\src\main\java\com\kafka\consumer\lab\ConsumerConfigFactory.java
+C:\Users\om\Desktop\KafKa\Day-4\labs\java-kafka-consumer-lab\src\main\java\com\kafka\consumer\lab\DemoTopicSeeder.java
+C:\Users\om\Desktop\KafKa\Day-4\labs\java-kafka-consumer-lab\src\main\java\com\kafka\consumer\lab\LagLoadProducer.java
+C:\Users\om\Desktop\KafKa\Day-4\labs\java-kafka-consumer-lab\src\main\java\com\kafka\consumer\lab\ManualAsyncCommitConsumer.java
+C:\Users\om\Desktop\KafKa\Day-4\labs\java-kafka-consumer-lab\src\main\java\com\kafka\consumer\lab\ManualSyncCommitConsumer.java
+C:\Users\om\Desktop\KafKa\Day-4\labs\java-kafka-consumer-lab\src\main\java\com\kafka\consumer\lab\NamedConsumer.java
+C:\Users\om\Desktop\KafKa\Day-4\labs\java-kafka-consumer-lab\src\main\java\com\kafka\consumer\lab\NoCommitConsumer.java
+C:\Users\om\Desktop\KafKa\Day-4\labs\java-kafka-consumer-lab\src\main\java\com\kafka\consumer\lab\SlowConsumer.java

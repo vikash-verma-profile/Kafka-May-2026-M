@@ -1,4 +1,4 @@
-# Kafka Java Lab — Create, Build & Run Guide
+# Kafka Java Lab -Create, Build & Run Guide
 
 This document explains **what the lab is**, **how it was created**, **what each file does**, and **how to run it** on your Windows machine with local Kafka.
 
@@ -17,7 +17,7 @@ This document explains **what the lab is**, **how it was created**, **what each 
 | **SimpleConsumer** | Subscribes to `lab-messages`, prints every message received |
 | **KafkaConfig** | Shared settings: `localhost:9092`, serializers, consumer group |
 
-You run the **consumer first**, then the **producer**. Messages typed/sent by Java appear in the consumer terminal — same idea as the console producer/consumer lab, but using the **Kafka Java client API**.
+You run the **consumer first**, then the **producer**. Messages typed/sent by Java appear in the consumer terminal -same idea as the console producer/consumer lab, but using the **Kafka Java client API**.
 
 ---
 
@@ -27,7 +27,7 @@ You run the **consumer first**, then the **producer**. Messages typed/sent by Ja
 |-------------|----------------|
 | **Java 17+** | `java -version` |
 | **Apache Maven** | `mvn -version` |
-| **Kafka broker running** | `localhost:9092` — see [kafka-kraft-setup-windows.md](./kafka-kraft-setup-windows.md) Part 2 |
+| **Kafka broker running** | `localhost:9092` -see [kafka-kraft-setup-windows.md](./kafka-kraft-setup-windows.md) Part 2 |
 | **Topic `lab-messages`** | Created once via CLI (step below) |
 
 ---
@@ -54,7 +54,7 @@ Day-2/Labs/
 
 Use this section if you want to **recreate** the project from scratch or understand the structure.
 
-### Step 4.1 — Create Maven project folders
+### Step 4.1 -Create Maven project folders
 
 ```text
 kafka-java-lab/
@@ -62,14 +62,14 @@ kafka-java-lab/
   src/main/java/com/kafka/lab/
 ```
 
-### Step 4.2 — `pom.xml` — dependencies and Java version
+### Step 4.2 -`pom.xml` -dependencies and Java version
 
 The project uses:
 
-- **`kafka-clients`** — official Apache Kafka Java API (producer/consumer)
-- **`slf4j-simple`** — logging (Kafka client uses SLF4J)
-- **Java 17** — `maven.compiler.release`
-- **`exec-maven-plugin`** — run `main` without packaging a JAR manually
+- **`kafka-clients`** -official Apache Kafka Java API (producer/consumer)
+- **`slf4j-simple`** -logging (Kafka client uses SLF4J)
+- **Java 17** -`maven.compiler.release`
+- **`exec-maven-plugin`** -run `main` without packaging a JAR manually
 
 Key dependency:
 
@@ -83,7 +83,7 @@ Key dependency:
 
 > **Note:** Your broker is Kafka **4.2**. Client `3.9.x` is compatible for this basic lab.
 
-### Step 4.3 — `KafkaConfig.java`
+### Step 4.3 -`KafkaConfig.java`
 
 Central place for connection settings:
 
@@ -91,25 +91,25 @@ Central place for connection settings:
 |---------|----------|----------|
 | Bootstrap | `localhost:9092` | `localhost:9092` |
 | Serializers | `StringSerializer` | `StringDeserializer` |
-| Group ID | — | `java-lab-group` |
-| Offset reset | — | `earliest` (read from start of topic) |
+| Group ID | -| `java-lab-group` |
+| Offset reset | -| `earliest` (read from start of topic) |
 
-### Step 4.4 — `SimpleProducer.java`
+### Step 4.4 -`SimpleProducer.java`
 
 1. Builds `KafkaProducer<String, String>`
 2. Sends messages: `"Hello from Java producer - message 1"` … `5`
 3. Uses **send callback** to print partition and offset
 4. Calls `flush()` so all messages are sent before exit
 
-### Step 4.5 — `SimpleConsumer.java`
+### Step 4.5 -`SimpleConsumer.java`
 
 1. Builds `KafkaConsumer<String, String>`
 2. Subscribes to `lab-messages`
-3. **Poll loop** — reads batches every 1 second
+3. **Poll loop** -reads batches every 1 second
 4. Prints each record: value, partition, offset
 5. Runs until you press **Ctrl+C**
 
-### Step 4.6 — Helper scripts (optional)
+### Step 4.6 -Helper scripts (optional)
 
 From `Labs/` folder, `run-producer.bat` and `run-consumer.bat` run Maven inside `kafka-java-lab/` so you do not forget to `cd`.
 
@@ -117,7 +117,7 @@ From `Labs/` folder, `run-producer.bat` and `run-consumer.bat` run Maven inside 
 
 ## 5. One-time setup before first run
 
-### Step 5.1 — Start Kafka (Terminal 1)
+### Step 5.1 -Start Kafka (Terminal 1)
 
 ```bat
 cd C:\kafka-bin\kafka_2.13-4.2.0
@@ -126,16 +126,16 @@ bin\windows\kafka-server-start.bat config\server.properties
 
 Wait for: `Kafka Server started`
 
-### Step 5.2 — Create topic (Terminal 2, once)
+### Step 5.2 -Create topic (Terminal 2, once)
 
 ```bat
 cd C:\kafka-bin\kafka_2.13-4.2.0
 bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --create --topic lab-messages --partitions 1 --replication-factor 1
 ```
 
-If topic exists, you will see an error — that is fine, skip to build/run.
+If topic exists, you will see an error -that is fine, skip to build/run.
 
-### Step 5.3 — Build the Java project (once per code change)
+### Step 5.3 -Build the Java project (once per code change)
 
 ```bat
 cd C:\Users\om\Desktop\KafKa\Day-2\Labs\kafka-java-lab
@@ -158,9 +158,9 @@ You need **3 terminals**:
 
 ---
 
-### Method A — Run from `kafka-java-lab` folder (recommended)
+### Method A -Run from `kafka-java-lab` folder (recommended)
 
-#### Terminal 2 — Consumer
+#### Terminal 2 -Consumer
 
 **Command 1**
 
@@ -182,7 +182,7 @@ Connecting to localhost:9092, topic=lab-messages, group=java-lab-group (Ctrl+C t
 
 Leave this terminal open.
 
-#### Terminal 3 — Producer
+#### Terminal 3 -Producer
 
 **Command 1**
 
@@ -218,7 +218,7 @@ Offset numbers vary depending on how many messages were sent before.
 
 ---
 
-### Method B — Run from `Labs` folder (helper scripts)
+### Method B -Run from `Labs` folder (helper scripts)
 
 ```bat
 cd C:\Users\om\Desktop\KafKa\Day-2\Labs
@@ -238,13 +238,13 @@ run-producer.bat
 
 Run from **`kafka-java-lab`** folder.
 
-**Producer** — send 3 messages:
+**Producer** -send 3 messages:
 
 ```bat
 mvn -q exec:java -Dexec.mainClass=com.kafka.lab.SimpleProducer -Dexec.args="localhost:9092 lab-messages 3"
 ```
 
-**Consumer** — custom group id:
+**Consumer** -custom group id:
 
 ```bat
 mvn -q exec:java -Dexec.mainClass=com.kafka.lab.SimpleConsumer -Dexec.args="localhost:9092 lab-messages my-custom-group"
@@ -294,14 +294,14 @@ Argument order: `[bootstrapServers] [topic] [thirdArg]`
         |                             |     java-lab-group         |
 ```
 
-- **Topic:** `lab-messages` — channel for messages  
+- **Topic:** `lab-messages` -channel for messages  
 - **Partition:** `0` (single partition in this lab)  
 - **Offset:** position of each message in the partition  
-- **Consumer group:** `java-lab-group` — Kafka tracks what the group has read  
+- **Consumer group:** `java-lab-group` -Kafka tracks what the group has read  
 
 ---
 
-## 11. Quick reference — copy/paste
+## 11. Quick reference -copy/paste
 
 **Build**
 
@@ -338,5 +338,5 @@ run-producer.bat
 
 - Change message text in `SimpleProducer.java` and recompile
 - Add a **message key** in `ProducerRecord` (e.g. `"user-1"`)
-- Run **two consumers** with the same group id — messages are load-balanced
-- Run a consumer with a **new group id** — both read all messages from `earliest`
+- Run **two consumers** with the same group id -messages are load-balanced
+- Run a consumer with a **new group id** -both read all messages from `earliest`

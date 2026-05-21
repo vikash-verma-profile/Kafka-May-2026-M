@@ -8,7 +8,7 @@
                     +------------------+
                     |  controller      |
                     |  node.id = 1     |
-                    |  port 9093       |  (KRaft only — not for producers)
+                    |  port 9093       |  (KRaft only -not for producers)
                     +--------+---------+
                              |
          +-------------------+-------------------+
@@ -26,11 +26,11 @@
 localhost:9092,localhost:9094,localhost:9095
 ```
 
-Do **not** use port `9093` in `--bootstrap-server` — that is the controller.
+Do **not** use port `9093` in `--bootstrap-server` -that is the controller.
 
 ---
 
-## Your original files — what was OK / what was fixed
+## Your original files -what was OK / what was fixed
 
 | Item | broker-1 | broker-2 | Status |
 |------|----------|----------|--------|
@@ -43,7 +43,7 @@ Do **not** use port `9093` in `--bootstrap-server` — that is the controller.
 | **controller.properties** | Missing | Missing | **Added** (official template; `log.dirs` → `C:/kafka-data/...`) |
 | **log.dirs on Windows** | `/tmp/...` | `/tmp/...` | **Fixed** → `C:/kafka-data/...` |
 | **Replication for 3 brokers** | RF=1 | RF=1 | **Fixed** → RF=3 on brokers |
-| **broker-3** | — | — | **Added** (node.id=4, port 9095) |
+| **broker-3** | -| -| **Added** (node.id=4, port 9095) |
 
 ---
 
@@ -51,7 +51,7 @@ Do **not** use port `9093` in `--bootstrap-server` — that is the controller.
 
 | File | Role | node.id | Client port |
 |------|------|---------|-------------|
-| `controller.properties` | controller | 1 | — (9093 internal) |
+| `controller.properties` | controller | 1 | -(9093 internal) |
 | `broker-1.properties` | broker | 2 | 9092 |
 | `broker-2.properties` | broker | 3 | 9094 |
 | `broker-3.properties` | broker | 4 | 9095 |

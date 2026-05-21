@@ -1,6 +1,6 @@
-# Multi-Broker Kafka Lab — Local Windows (CLI Only)
+# Multi-Broker Kafka Lab -Local Windows (CLI Only)
 
-Run **3 Kafka brokers** on your **local machine** (`C:\kafka-bin\kafka_2.13-4.2.0`) and practice producer/consumer scenarios using **only CLI** — no Docker, no Java/Python/.NET code.
+Run **3 Kafka brokers** on your **local machine** (`C:\kafka-bin\kafka_2.13-4.2.0`) and practice producer/consumer scenarios using **only CLI** -no Docker, no Java/Python/.NET code.
 
 **Single-broker local guide:** [kafka-kraft-setup-windows.md](./kafka-kraft-setup-windows.md)  
 **Docker version of this lab:** [kafka-multi-broker-cli-lab.md](./kafka-multi-broker-cli-lab.md)
@@ -23,7 +23,7 @@ Run **3 Kafka brokers** on your **local machine** (`C:\kafka-bin\kafka_2.13-4.2.
 ## 2. Cluster layout (local)
 
 ```text
-  YOUR WINDOWS PC — C:\kafka-bin\kafka_2.13-4.2.0
+  YOUR WINDOWS PC -C:\kafka-bin\kafka_2.13-4.2.0
   +------------------------------------------------------------------+
   |  bootstrap-server (clients):                                     |
   |    localhost:9092,localhost:9094,localhost:9095                  |
@@ -78,7 +78,7 @@ docker compose -f docker-compose-3brokers.yml down
 
 ## 4. One-time cluster setup
 
-### Step 4.1 — Run setup script (format all 3 brokers)
+### Step 4.1 -Run setup script (format all 3 brokers)
 
 ```bat
 cd C:\Users\om\Desktop\KafKa\Day-2\Labs\kafka-local-3brokers\scripts
@@ -96,11 +96,11 @@ This creates:
 
 ---
 
-### Step 4.2 — Start all 3 brokers (3 separate terminals)
+### Step 4.2 -Start all 3 brokers (3 separate terminals)
 
 Keep each terminal open.
 
-**Terminal 1 — Broker 1**
+**Terminal 1 -Broker 1**
 
 ```bat
 cd C:\Users\om\Desktop\KafKa\Day-2\Labs\kafka-local-3brokers\scripts
@@ -109,14 +109,14 @@ start-broker1.bat
 
 Wait for: `Kafka Server started`
 
-**Terminal 2 — Broker 2**
+**Terminal 2 -Broker 2**
 
 ```bat
 cd C:\Users\om\Desktop\KafKa\Day-2\Labs\kafka-local-3brokers\scripts
 start-broker2.bat
 ```
 
-**Terminal 3 — Broker 3**
+**Terminal 3 -Broker 3**
 
 ```bat
 cd C:\Users\om\Desktop\KafKa\Day-2\Labs\kafka-local-3brokers\scripts
@@ -125,7 +125,7 @@ start-broker3.bat
 
 ---
 
-### Step 4.3 — Verify cluster
+### Step 4.3 -Verify cluster
 
 **Terminal 4 (CLI)**
 
@@ -157,7 +157,7 @@ set BS=localhost:9092,localhost:9094,localhost:9095
 
 ---
 
-# Scenario 2 — One publisher, 3 brokers, one consumer
+# Scenario 2 -One publisher, 3 brokers, one consumer
 
 **Goal:** One console producer sends messages. Data is stored on all 3 brokers (replicas). One console consumer reads everything.
 
@@ -177,7 +177,7 @@ set BS=localhost:9092,localhost:9094,localhost:9095
 
 ---
 
-### Step 2.1 — Create topic
+### Step 2.1 -Create topic
 
 ```bat
 cd C:\kafka-bin\kafka_2.13-4.2.0
@@ -190,7 +190,7 @@ bin\windows\kafka-topics.bat --bootstrap-server %BS% --create --topic scenario2-
 
 ---
 
-### Step 2.2 — See partition leaders (proof of multi-broker)
+### Step 2.2 -See partition leaders (proof of multi-broker)
 
 ```bat
 bin\windows\kafka-topics.bat --bootstrap-server %BS% --describe --topic scenario2-topic
@@ -213,7 +213,7 @@ Topic: scenario2-topic  PartitionCount: 3  ReplicationFactor: 3
 
 ---
 
-### Step 2.3 — Start ONE consumer (Terminal A)
+### Step 2.3 -Start ONE consumer (Terminal A)
 
 ```bat
 cd C:\kafka-bin\kafka_2.13-4.2.0
@@ -226,7 +226,7 @@ Leave running.
 
 ---
 
-### Step 2.4 — Start ONE producer (Terminal B)
+### Step 2.4 -Start ONE producer (Terminal B)
 
 ```bat
 cd C:\kafka-bin\kafka_2.13-4.2.0
@@ -247,24 +247,24 @@ local-msg-5
 
 ---
 
-### Step 2.5 — Expected result
+### Step 2.5 -Expected result
 
 | Terminal | What you see |
 |----------|----------------|
 | Producer | Accepts lines |
 | Consumer | All 5 messages (order may vary) |
 
-Run `--describe` again — leaders stay on different broker ids.
+Run `--describe` again -leaders stay on different broker ids.
 
 ---
 
-# Scenario 1 — Multiple producers and consumers
+# Scenario 1 -Multiple producers and consumers
 
 Same `%BS%` and `cd C:\kafka-bin\kafka_2.13-4.2.0`.
 
 ---
 
-## Scenario 1A — Two producers, two consumers (same group)
+## Scenario 1A -Two producers, two consumers (same group)
 
 Messages are **split** between consumers.
 
@@ -311,7 +311,7 @@ Type: `from-B-1`, `from-B-2`
 
 ---
 
-## Scenario 1B — Two consumers, different groups (fan-out)
+## Scenario 1B -Two consumers, different groups (fan-out)
 
 Each group receives **every** message.
 
@@ -387,7 +387,7 @@ bin\windows\kafka-topics.bat --bootstrap-server %BS% --delete --topic scenario2-
 # Stop the cluster
 
 1. Press **Ctrl+C** in each of the 3 broker terminals  
-2. Optional — wipe data for a fresh lab:
+2. Optional -wipe data for a fresh lab:
 
 ```bat
 rmdir /s /q C:\kafka-data\multi-broker-1
@@ -408,7 +408,7 @@ Then run `setup-cluster.bat` again.
 | `Replication factor: 3 larger than number of brokers` | Start all 3 brokers before creating topic |
 | `LEADER_NOT_AVAILABLE` | Wait 30 s after starting brokers 1–3 |
 | Producer/consumer only use `localhost:9092` | Use full `%BS%` with 9092,9094,9095 |
-| `kafka-storage.bat` does nothing | File was empty — copy from [kafka-kraft-setup-windows.md](./kafka-kraft-setup-windows.md) |
+| `kafka-storage.bat` does nothing | File was empty -copy from [kafka-kraft-setup-windows.md](./kafka-kraft-setup-windows.md) |
 | Format already exists | Delete `C:\kafka-data\multi-broker-*` folders, re-run setup |
 
 ---
@@ -424,7 +424,7 @@ Then run `setup-cluster.bat` again.
 
 ---
 
-# Quick start — Scenario 2 (copy/paste)
+# Quick start -Scenario 2 (copy/paste)
 
 ```bat
 cd C:\Users\om\Desktop\KafKa\Day-2\Labs\kafka-local-3brokers\scripts

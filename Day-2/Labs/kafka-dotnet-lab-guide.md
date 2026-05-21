@@ -1,4 +1,4 @@
-# Kafka .NET Lab — Create, Build & Run Guide
+# Kafka .NET Lab -Create, Build & Run Guide
 
 .NET 6+ console app with **producer** and **consumer** using [Confluent.Kafka](https://github.com/confluentinc/confluent-kafka-dotnet). Same broker and topic as the Java and Python labs.
 
@@ -60,7 +60,7 @@ Day-2/Labs/
 
 ## 4. How this lab was created
 
-### Step 4.1 — Create solution and project
+### Step 4.1 -Create solution and project
 
 ```bat
 dotnet new sln -n KafkaDotNetLab
@@ -68,7 +68,7 @@ dotnet new console -n KafkaDotNetLab -o src/KafkaDotNetLab -f net6.0
 dotnet sln add src/KafkaDotNetLab/KafkaDotNetLab.csproj
 ```
 
-### Step 4.2 — Add NuGet package
+### Step 4.2 -Add NuGet package
 
 ```bat
 dotnet add package Confluent.Kafka
@@ -80,7 +80,7 @@ In `KafkaDotNetLab.csproj`:
 <PackageReference Include="Confluent.Kafka" Version="2.6.1" />
 ```
 
-### Step 4.3 — Source files
+### Step 4.3 -Source files
 
 | File | Purpose |
 |------|---------|
@@ -89,7 +89,7 @@ In `KafkaDotNetLab.csproj`:
 | `SimpleConsumer.cs` | `ConsumerBuilder`, `Subscribe`, `Consume` loop |
 | `Program.cs` | `dotnet run -- consumer` or `producer` |
 
-### Step 4.4 — Confluent.Kafka basics
+### Step 4.4 -Confluent.Kafka basics
 
 **Producer**
 
@@ -107,21 +107,21 @@ In `KafkaDotNetLab.csproj`:
 
 ## 5. One-time setup
 
-### Step 5.1 — Start Kafka (Terminal 1)
+### Step 5.1 -Start Kafka (Terminal 1)
 
 ```bat
 cd C:\kafka-bin\kafka_2.13-4.2.0
 bin\windows\kafka-server-start.bat config\server.properties
 ```
 
-### Step 5.2 — Create topic (once)
+### Step 5.2 -Create topic (once)
 
 ```bat
 cd C:\kafka-bin\kafka_2.13-4.2.0
 bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --create --topic lab-messages --partitions 1 --replication-factor 1
 ```
 
-### Step 5.3 — Build the .NET project
+### Step 5.3 -Build the .NET project
 
 **Command 1**
 
@@ -144,9 +144,9 @@ Expected: `Build succeeded`.
 
 **3 terminals:** Kafka broker, consumer, producer.
 
-### Method A — From project folder
+### Method A -From project folder
 
-#### Terminal 2 — Consumer (start first)
+#### Terminal 2 -Consumer (start first)
 
 **Command 1**
 
@@ -166,7 +166,7 @@ dotnet run -- consumer
 Connecting to localhost:9092, topic=lab-messages, group=dotnet-lab-group (Ctrl+C to stop)
 ```
 
-#### Terminal 3 — Producer
+#### Terminal 3 -Producer
 
 **Command 1**
 
@@ -198,7 +198,7 @@ Received: "Hello from .NET producer - message 1" | partition=0 offset=25 key=nul
 
 ---
 
-### Method B — From `Labs` folder
+### Method B -From `Labs` folder
 
 ```bat
 cd C:\Users\om\Desktop\KafKa\Day-2\Labs

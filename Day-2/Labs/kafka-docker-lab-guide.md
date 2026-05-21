@@ -1,4 +1,4 @@
-# Kafka on Docker — Lab Guide (CLI + Client Apps)
+# Kafka on Docker -Lab Guide (CLI + Client Apps)
 
 Run Kafka in **Docker** and use the **same CLI workflow** as the local Windows install (`kafka-topics`, console producer/consumer). Your Java, Python, and .NET labs still connect to **`localhost:9092`**.
 
@@ -19,7 +19,7 @@ Run Kafka in **Docker** and use the **same CLI workflow** as the local Windows i
 | Container name | `kafka-broker` |
 | Image | `apache/kafka:3.9.0` (KRaft, single node) |
 
-No ZooKeeper. No manual `kafka-storage format` — the image configures KRaft on first start.
+No ZooKeeper. No manual `kafka-storage format` -the image configures KRaft on first start.
 
 ---
 
@@ -41,7 +41,7 @@ REM Close the terminal running kafka-server-start.bat, or stop the Java process 
 
 ---
 
-## 3. Local install vs Docker — command mapping
+## 3. Local install vs Docker -command mapping
 
 | Task | Local Windows (your machine) | Docker (this lab) |
 |------|------------------------------|-------------------|
@@ -60,20 +60,20 @@ REM Close the terminal running kafka-server-start.bat, or stop the Java process 
 
 ## 4. One-time setup
 
-### Step 4.1 — Verify Docker
+### Step 4.1 -Verify Docker
 
 ```bat
 docker --version
 docker compose version
 ```
 
-### Step 4.2 — Go to the Docker lab folder
+### Step 4.2 -Go to the Docker lab folder
 
 ```bat
 cd C:\Users\om\Desktop\KafKa\Day-2\Labs\kafka-docker
 ```
 
-### Step 4.3 — Pull image (first time only)
+### Step 4.3 -Pull image (first time only)
 
 ```bat
 docker compose pull
@@ -83,14 +83,14 @@ docker compose pull
 
 ## 5. Start Kafka in Docker
 
-### Option A — Helper script
+### Option A -Helper script
 
 ```bat
 cd C:\Users\om\Desktop\KafKa\Day-2\Labs\kafka-docker\scripts
 start-kafka.bat
 ```
 
-### Option B — Manual
+### Option B -Manual
 
 ```bat
 cd C:\Users\om\Desktop\KafKa\Day-2\Labs\kafka-docker
@@ -132,13 +132,13 @@ Data is removed when the container is removed (ephemeral `/tmp/kraft-combined-lo
 
 ---
 
-# Part A — CLI lab (same as local machine)
+# Part A -CLI lab (same as local machine)
 
 Use **3 terminals** on your Windows host.
 
 ---
 
-## Terminal 1 — Kafka running in Docker
+## Terminal 1 -Kafka running in Docker
 
 Kafka runs in the background after `docker compose up -d`. You do **not** need a dedicated terminal unless you want logs:
 
@@ -151,7 +151,7 @@ Press Ctrl+C to stop following logs (broker keeps running).
 
 ---
 
-## Terminal 2 — Create topic
+## Terminal 2 -Create topic
 
 **Using helper script**
 
@@ -180,7 +180,7 @@ lab-messages
 
 ---
 
-## Terminal 3 — Consumer (start before producer)
+## Terminal 3 -Consumer (start before producer)
 
 **Helper**
 
@@ -199,7 +199,7 @@ Leave this terminal open. It waits for messages.
 
 ---
 
-## Terminal 2 — Producer (send messages)
+## Terminal 2 -Producer (send messages)
 
 **Helper**
 
@@ -231,7 +231,7 @@ Message number 2
 
 ---
 
-# Part B — Run Java / Python / .NET labs against Docker Kafka
+# Part B -Run Java / Python / .NET labs against Docker Kafka
 
 Kafka in Docker still exposes **`localhost:9092`** on your host. No code changes needed.
 
@@ -249,7 +249,7 @@ Example: Java consumer + Python producer, all against Docker broker.
 
 ---
 
-# Part C — Full command reference (copy-paste)
+# Part C -Full command reference (copy-paste)
 
 ### Start / stop
 
@@ -365,7 +365,7 @@ cd C:\Users\om\Desktop\KafKa\Day-2\Labs\kafka-docker\scripts
 kafka-cli.bat console-consumer --bootstrap-server localhost:9092 --topic lab-messages --from-beginning
 ```
 
-**Producer (Terminal B)** — create topic first if needed:
+**Producer (Terminal B)** -create topic first if needed:
 
 ```bat
 kafka-cli.bat topics --bootstrap-server localhost:9092 --create --topic lab-messages --partitions 1 --replication-factor 1

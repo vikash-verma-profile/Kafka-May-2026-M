@@ -1,0 +1,12 @@
+com\kafka\consumer\lab\LagLoadProducer.class
+com\kafka\consumer\lab\NamedConsumer.class
+com\kafka\consumer\lab\CommitLabProducer.class
+com\kafka\consumer\lab\AutoCommitConsumer.class
+com\kafka\consumer\lab\SlowConsumer.class
+com\kafka\consumer\lab\ConsumerConfigFactory.class
+com\kafka\consumer\lab\BasicConsumer.class
+com\kafka\consumer\lab\ManualSyncCommitConsumer.class
+com\kafka\consumer\lab\DemoTopicSeeder.class
+com\kafka\consumer\lab\NoCommitConsumer.class
+com\kafka\consumer\lab\AssignmentLogger.class
+com\kafka\consumer\lab\ManualAsyncCommitConsumer.class

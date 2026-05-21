@@ -90,7 +90,7 @@ mkdir C:\kafka-data\kraft-broker-logs-3
 bin\windows\kafka-storage.bat random-uuid
 ```
 
-Example output: `IrBZOkc6Siq9sMLnDA53Hg` — use your value as `YOUR_CLUSTER_ID` in the steps below.
+Example output: `IrBZOkc6Siq9sMLnDA53Hg` -use your value as `YOUR_CLUSTER_ID` in the steps below.
 
 ### Step A5 - Format controller
 
