@@ -18,7 +18,7 @@ Lab topic: **`orders-topic`** (4 partitions)
 ## Quick start
 
 1. Complete [lab-01-environment-setup](./lab-01-environment-setup/README.md)- start broker and create `orders-topic`.
-2. Run Java labs from `java-kafka-producer-lab/` or use the helper `.bat` scripts in this folder.
+2. Run Java labs from `java-kafka-producer-lab/` (quote `-D` properties in PowerShell) or use `run-java-lab.ps1` / `run-java-lab.bat` in this folder.
 3. Run Python labs from `python-kafka-producer-lab/`.
 
 ## Lab index
@@ -47,6 +47,8 @@ Lab topic: **`orders-topic`** (4 partitions)
 Day-3/Labs/
   README.md
   scripts/
+  run-java-lab.ps1             ← PowerShell helper for Java labs
+  run-java-lab.bat             ← cmd.exe helper for Java labs
   java-kafka-producer-lab/     ← Maven project (all Java producers)
   python-kafka-producer-lab/   ← Python producers
   lab-01-environment-setup/

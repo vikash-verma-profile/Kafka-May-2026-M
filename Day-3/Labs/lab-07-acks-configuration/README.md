@@ -17,22 +17,19 @@
 ## Step 1- Run with `acks=all` (default in lab)
 
 ```powershell
-mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.AcksProducer ^
-  -Dexec.args="localhost:9092 orders-topic all"
+mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.AcksProducer" "-Dexec.args=localhost:9092 orders-topic all"
 ```
 
 ## Step 2- Run with `acks=1`
 
 ```powershell
-mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.AcksProducer ^
-  -Dexec.args="localhost:9092 orders-topic 1"
+mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.AcksProducer" "-Dexec.args=localhost:9092 orders-topic 1"
 ```
 
 ## Step 3- Run with `acks=0` (careful)
 
 ```powershell
-mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.AcksProducer ^
-  -Dexec.args="localhost:9092 orders-topic 0"
+mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.AcksProducer" "-Dexec.args=localhost:9092 orders-topic 0"
 ```
 
 Producer returns quickly; messages can be lost if the broker fails immediately.

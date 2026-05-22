@@ -9,7 +9,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 /**
  * Lab 06- No key: messages spread across partitions (sticky batching per batch).
  *
- * <p>Run: mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.RoundRobinProducer
+ * <p>Run: mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.RoundRobinProducer"
  */
 public final class RoundRobinProducer {
 

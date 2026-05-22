@@ -9,7 +9,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 /**
  * Lab 05- Same key routes all messages to the same partition.
  *
- * <p>Run: mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.KeyedProducer
+ * <p>Run: mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.KeyedProducer"
  */
 public final class KeyedProducer {
 

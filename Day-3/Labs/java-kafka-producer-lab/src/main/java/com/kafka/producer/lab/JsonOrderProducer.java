@@ -8,7 +8,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 /**
  * Lab 11- Structured JSON order events.
  *
- * <p>Run: mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.JsonOrderProducer
+ * <p>Run: mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.JsonOrderProducer"
  */
 public final class JsonOrderProducer {
 

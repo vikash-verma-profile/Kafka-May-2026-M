@@ -13,7 +13,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 /**
  * Lab 12- 100 messages with customerId keys (4 customers -> 4 partitions).
  *
- * <p>Run: mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.MultiPartitionProducer
+ * <p>Run: mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.MultiPartitionProducer"
  */
 public final class MultiPartitionProducer {
 

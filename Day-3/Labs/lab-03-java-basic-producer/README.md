@@ -51,14 +51,16 @@ mvn -q compile
 **Option A- Maven:**
 
 ```powershell
-mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.BasicProducer
+mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.BasicProducer"
 ```
 
 **Option B- Helper script (from `Labs` folder):**
 
 ```powershell
-run-java-lab.bat com.kafka.producer.lab.BasicProducer
+.\run-java-lab.ps1 com.kafka.producer.lab.BasicProducer
 ```
+
+Or in **cmd.exe**: `run-java-lab.bat com.kafka.producer.lab.BasicProducer`
 
 **Expected output:**
 

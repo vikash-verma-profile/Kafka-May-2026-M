@@ -18,7 +18,7 @@
 ## Step 1- Run the exercise
 
 ```powershell
-mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.MultiPartitionProducer
+mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.MultiPartitionProducer"
 ```
 
 ## Step 2- Read the summary

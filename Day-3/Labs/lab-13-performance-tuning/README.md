@@ -18,7 +18,7 @@
 ## Step 1- Run tuned producer
 
 ```powershell
-mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.PerformanceTunedProducer
+mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.PerformanceTunedProducer"
 ```
 
 Note messages/sec at the end.

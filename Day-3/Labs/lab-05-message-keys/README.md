@@ -12,14 +12,13 @@ Sends 10 messages, all with key `customer-1`:
 
 ```powershell
 cd Day-3\Labs\java-kafka-producer-lab
-mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.KeyedProducer
+mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.KeyedProducer"
 ```
 
 Custom args: `bootstrap topic key count`
 
 ```powershell
-mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.KeyedProducer ^
-  -Dexec.args="localhost:9092 orders-topic customer-1 10"
+mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.KeyedProducer" "-Dexec.args=localhost:9092 orders-topic customer-1 10"
 ```
 
 ## Step 2- Record partition numbers
@@ -37,8 +36,7 @@ Order-2 -> partition=2 offset=...
 ## Step 3- Change the key and compare
 
 ```powershell
-mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.KeyedProducer ^
-  -Dexec.args="localhost:9092 orders-topic customer-2 10"
+mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.KeyedProducer" "-Dexec.args=localhost:9092 orders-topic customer-2 10"
 ```
 
 Partition number may differ from `customer-1`.

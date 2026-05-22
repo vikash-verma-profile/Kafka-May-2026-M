@@ -8,7 +8,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 /**
  * Lab 09- Idempotent producer prevents duplicate writes on retry.
  *
- * <p>Run: mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.IdempotentProducer
+ * <p>Run: mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.IdempotentProducer"
  */
 public final class IdempotentProducer {
 

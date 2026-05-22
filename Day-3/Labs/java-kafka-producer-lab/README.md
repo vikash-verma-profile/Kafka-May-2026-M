@@ -10,8 +10,16 @@ mvn -q compile
 
 ## Run a lab class
 
+From this folder in **PowerShell**, quote each `-D` property (unquoted `-D` is parsed as a PowerShell switch):
+
 ```powershell
-mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.BasicProducer
+mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.BasicProducer"
+```
+
+Or from `Day-3/Labs`:
+
+```powershell
+.\run-java-lab.ps1 com.kafka.producer.lab.BasicProducer
 ```
 
 | Class | Lab |

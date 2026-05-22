@@ -11,7 +11,7 @@
 Default: 20 messages, no key:
 
 ```powershell
-mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.RoundRobinProducer
+mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.RoundRobinProducer"
 ```
 
 ## Step 2- Compare with Lab 05

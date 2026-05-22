@@ -11,7 +11,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 /**
  * Lab 13- batch.size, linger.ms, compression.type, buffer.memory.
  *
- * <p>Run: mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.PerformanceTunedProducer
+ * <p>Run: mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.PerformanceTunedProducer"
  */
 public final class PerformanceTunedProducer {
 

@@ -26,7 +26,7 @@
 
 ```powershell
 cd Day-3\Labs\java-kafka-producer-lab
-mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.JsonOrderProducer
+mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.JsonOrderProducer"
 ```
 
 3. Consumer shows JSON strings on `orders-topic`

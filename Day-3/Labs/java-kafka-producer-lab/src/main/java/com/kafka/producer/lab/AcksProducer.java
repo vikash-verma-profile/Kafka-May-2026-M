@@ -8,7 +8,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 /**
  * Lab 07- Configure acks (0, 1, or all).
  *
- * <p>Run: mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.AcksProducer -Dexec.args="all"
+ * <p>Run: mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.AcksProducer" "-Dexec.args=localhost:9092 orders-topic all"
  */
 public final class AcksProducer {
 

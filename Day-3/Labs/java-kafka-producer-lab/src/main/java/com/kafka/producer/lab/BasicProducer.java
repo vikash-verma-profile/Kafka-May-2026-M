@@ -6,7 +6,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 /**
  * Lab 03- Send a single message with key "101" to orders-topic.
  *
- * <p>Run: mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.BasicProducer
+ * <p>Run: mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.BasicProducer"
  */
 public final class BasicProducer {
 

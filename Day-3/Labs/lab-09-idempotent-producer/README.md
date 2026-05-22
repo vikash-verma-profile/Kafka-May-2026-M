@@ -19,7 +19,7 @@ Idempotence automatically sets safe defaults for `acks`, `retries`, and `max.in.
 ## Step 2- Run the producer
 
 ```powershell
-mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.IdempotentProducer
+mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.IdempotentProducer"
 ```
 
 ## Step 3- Verify offsets are sequential per partition

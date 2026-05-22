@@ -11,7 +11,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 /**
  * Lab 08- Retries and retry backoff (try stopping broker mid-run).
  *
- * <p>Run: mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.RetriesProducer
+ * <p>Run: mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.RetriesProducer"
  */
 public final class RetriesProducer {
 

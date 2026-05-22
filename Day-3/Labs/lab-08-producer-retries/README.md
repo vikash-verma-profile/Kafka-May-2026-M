@@ -19,7 +19,7 @@
 Sends 5 messages with 2-second pause between each:
 
 ```powershell
-mvn -q exec:java -Dexec.mainClass=com.kafka.producer.lab.RetriesProducer
+mvn -q exec:java "-Dexec.mainClass=com.kafka.producer.lab.RetriesProducer"
 ```
 
 ## Step 3- Simulate broker failure (optional, advanced)
