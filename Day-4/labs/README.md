@@ -18,6 +18,7 @@ Hands-on labs from **Kafka_Consumers.pptx**. Each folder has a step-by-step guid
 ## Quick start
 
 1. Complete **[lab-00-initial-setup](./lab-00-initial-setup/README.md)** - install Kafka, start broker, create topics.
+   - **Multi-node cluster (controller + broker-1 + broker-3):** from this folder run `start-kafka-cluster.bat` (opens three CMD windows).
 2. Run Java consumers from `java-kafka-consumer-lab/` or Python from `python-kafka-consumer-lab/`.
 3. Use helper scripts in `scripts/` (set `KAFKA_HOME` first).
 

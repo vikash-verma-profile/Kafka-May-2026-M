@@ -7,4 +7,5 @@ if "%~1"=="" (
 set MAIN=%~1
 shift
 cd /d "%~dp0java-kafka-consumer-lab"
-call mvn -q exec:java -Dexec.mainClass=%MAIN% -Dexec.args="%*"
+REM Use %1..%9 after shift; %* on Windows can still include the main class name.
+call mvn -q exec:java -Dexec.mainClass=%MAIN% "-Dexec.args=%1 %2 %3 %4 %5 %6 %7 %8 %9"
