@@ -1,0 +1,24 @@
+{
+  "name": "orders-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "topics": "orders",
+    "connection.url": "jdbc:postgresql://localhost:5432/analytics",
+    "connection.user": "postgres",
+    "connection.password": "postgres",
+    "insert.mode": "upsert",
+    "pk.mode": "record_key",
+    "pk.fields": "orderId",
+    "auto.create": "true",
+    "auto.evolve": "true",
+    "table.name.format": "orders_fact",
+    "tasks.max": "6",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "false",
+    "errors.tolerance": "all",
+    "errors.deadletterqueue.topic.name": "orders-sink-dlq",
+    "errors.deadletterqueue.context.headers.enable": "true"
+  }
+}

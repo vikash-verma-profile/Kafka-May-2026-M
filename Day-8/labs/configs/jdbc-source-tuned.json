@@ -1,0 +1,19 @@
+{
+  "name": "postgres-orders-source-tuned",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+    "connection.url": "jdbc:postgresql://localhost:5432/ordersdb",
+    "connection.user": "postgres",
+    "connection.password": "postgres",
+    "table.whitelist": "orders",
+    "mode": "incrementing",
+    "incrementing.column.name": "id",
+    "poll.interval.ms": "2000",
+    "batch.max.rows": "2000",
+    "topic.prefix": "postgres-",
+    "tasks.max": "8",
+    "producer.override.batch.size": "65536",
+    "producer.override.linger.ms": "20",
+    "producer.override.compression.type": "lz4"
+  }
+}

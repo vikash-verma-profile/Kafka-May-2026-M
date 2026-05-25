@@ -1,0 +1,6 @@
+com\training\kafka\streams\StreamsConfigFactory.class
+com\training\kafka\streams\lab02\WordCountApp.class
+com\training\kafka\streams\OrderProducer.class
+com\training\kafka\streams\lab03\OrderFilterAggregateApp.class
+com\training\kafka\streams\lab01\FirstStreamsApp.class
+com\training\kafka\streams\lab04\OrderPipelineApp.class

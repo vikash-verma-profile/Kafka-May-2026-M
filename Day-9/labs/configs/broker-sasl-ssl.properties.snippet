@@ -1,0 +1,13 @@
+# Append to broker server.properties for Lab 03 (adjust paths)
+listeners=SASL_SSL://:9093
+advertised.listeners=SASL_SSL://localhost:9093
+security.inter.broker.protocol=SASL_SSL
+sasl.enabled.mechanisms=SCRAM-SHA-512
+ssl.keystore.location=C:/kafka-config/kafka.keystore.jks
+ssl.keystore.password=changeit
+ssl.key.password=changeit
+ssl.truststore.location=C:/kafka-config/kafka.truststore.jks
+ssl.truststore.password=changeit
+authorizer.class.name=org.apache.kafka.metadata.authorizer.StandardAuthorizer
+allow.everyone.if.no.acl.found=false
+super.users=User:admin

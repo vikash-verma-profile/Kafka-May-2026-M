@@ -1,0 +1,20 @@
+groups:
+  - name: kafka_consumer_lag
+    rules:
+      - alert: ConsumerLagHigh
+        expr: kafka_consumergroup_group_max_lag_seconds > 30
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Consumer group {{ $labels.group }} lag exceeds 30s"
+
+  - name: kafka_broker_health
+    rules:
+      - alert: UnderReplicatedPartitions
+        expr: sum(kafka_server_replicamanager_underreplicatedpartitions) > 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Under-replicated partitions detected"

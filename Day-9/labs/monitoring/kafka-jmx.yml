@@ -1,0 +1,7 @@
+# Minimal jmx_exporter rules for Kafka broker (Lab 04)
+# Full file: https://github.com/prometheus/jmx_exporter/blob/main/example_configs/kafka-kafka-2_0_0.yml
+lowercaseOutputName: true
+rules:
+  - pattern: kafka.server<type=BrokerTopicMetrics, name=(\w+)><>Count
+    name: kafka_server_brokertopicmetrics_$1_total
+    type: COUNTER

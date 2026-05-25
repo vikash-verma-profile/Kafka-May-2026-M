@@ -1,0 +1,11 @@
+C:\Users\om\Desktop\KafKa\Day-6\labs\java-serialization-lab\src\main\java\com\training\kafka\config\LabConfig.java
+C:\Users\om\Desktop\KafKa\Day-6\labs\java-serialization-lab\src\main\java\com\training\kafka\lab01\FourFormatsLab.java
+C:\Users\om\Desktop\KafKa\Day-6\labs\java-serialization-lab\src\main\java\com\training\kafka\lab02\FormatBenchmark.java
+C:\Users\om\Desktop\KafKa\Day-6\labs\java-serialization-lab\src\main\java\com\training\kafka\lab04\AvroProducer.java
+C:\Users\om\Desktop\KafKa\Day-6\labs\java-serialization-lab\src\main\java\com\training\kafka\lab05\AvroConsumer.java
+C:\Users\om\Desktop\KafKa\Day-6\labs\java-serialization-lab\src\main\java\com\training\kafka\lab06\SchemaEvolutionDemo.java
+C:\Users\om\Desktop\KafKa\Day-6\labs\java-serialization-lab\src\main\java\com\training\kafka\model\EmployeePojo.java
+C:\Users\om\Desktop\KafKa\Day-6\labs\java-serialization-lab\target\generated-sources\avro\com\training\kafka\Employee.java
+C:\Users\om\Desktop\KafKa\Day-6\labs\java-serialization-lab\target\generated-sources\protobuf\java\com\training\kafka\proto\Employee.java
+C:\Users\om\Desktop\KafKa\Day-6\labs\java-serialization-lab\target\generated-sources\protobuf\java\com\training\kafka\proto\EmployeeMessage.java
+C:\Users\om\Desktop\KafKa\Day-6\labs\java-serialization-lab\target\generated-sources\protobuf\java\com\training\kafka\proto\EmployeeMessageOrBuilder.java

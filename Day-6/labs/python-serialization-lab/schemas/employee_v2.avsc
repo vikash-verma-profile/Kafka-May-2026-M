@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "Employee",
+  "namespace": "com.training.kafka",
+  "fields": [
+    {"name": "id", "type": "int"},
+    {"name": "name", "type": "string"},
+    {"name": "dept", "type": "string"},
+    {"name": "salary", "type": "double"},
+    {"name": "email", "type": "string", "default": ""}
+  ]
+}

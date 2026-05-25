@@ -1,0 +1,21 @@
+{
+  "name": "jdbc-source-smt-demo",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+    "connection.url": "jdbc:postgresql://localhost:5432/ordersdb",
+    "connection.user": "postgres",
+    "connection.password": "postgres",
+    "table.whitelist": "orders",
+    "mode": "incrementing",
+    "incrementing.column.name": "id",
+    "topic.prefix": "clean-",
+    "tasks.max": "1",
+    "transforms": "RenameKey,DropMeta,AddTimestamp",
+    "transforms.RenameKey.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
+    "transforms.RenameKey.renames": "customer_id:customerId,order_total:total",
+    "transforms.DropMeta.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
+    "transforms.DropMeta.blacklist": "_meta",
+    "transforms.AddTimestamp.type": "org.apache.kafka.connect.transforms.InsertField$Value",
+    "transforms.AddTimestamp.timestamp.field": "ingested_at"
+  }
+}
