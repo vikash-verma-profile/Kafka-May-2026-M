@@ -1,5 +1,5 @@
 """
-Lab 05 — describe consumer group lag via kafka-python (admin-style check).
+Lab 05-describe consumer group lag via kafka-python (admin-style check).
 
 Run: python lab05_lag_check.py order-processor
 """

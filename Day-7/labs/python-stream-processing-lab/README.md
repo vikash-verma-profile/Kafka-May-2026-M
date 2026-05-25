@@ -15,10 +15,10 @@ pip install -r requirements.txt
 
 | Script | Lab |
 |--------|-----|
-| `lab01_uppercase_stream.py` | 01 — uppercase transform |
-| `lab02_word_count.py` | 02 — word count |
-| `lab03_filter_aggregate.py` | 03 — filter + aggregate |
-| `lab04_order_pipeline.py` | 04 — mini project |
+| `lab01_uppercase_stream.py` | 01-uppercase transform |
+| `lab02_word_count.py` | 02-word count |
+| `lab03_filter_aggregate.py` | 03-filter + aggregate |
+| `lab04_order_pipeline.py` | 04-mini project |
 | `order_producer.py` | sample data |
 
 ## Example

@@ -1,8 +1,8 @@
-# Lab 05 — Consumer Lag Alerting
+# Lab 05-Consumer Lag Alerting
 
 **Objective:** Deploy lag monitoring, write a Prometheus alert rule, and fire/recover an alert by stopping a consumer.
 
-From **Kafka_Security_Monitoring.pptx** — Slide 21. **Time:** ~20 min.
+From **Kafka_Security_Monitoring.pptx**-Slide 21. **Time:** ~20 min.
 
 ---
 
@@ -22,7 +22,7 @@ From **Kafka_Security_Monitoring.pptx** — Slide 21. **Time:** ~20 min.
 
 ---
 
-## Step 1 — Deploy kafka-lag-exporter
+## Step 1-Deploy kafka-lag-exporter
 
 Configure `application.conf`:
 
@@ -39,7 +39,7 @@ Run exporter (Docker or JAR) exposing port **9999**.
 
 ---
 
-## Step 2 — Prometheus scrape lag exporter
+## Step 2-Prometheus scrape lag exporter
 
 ```yaml
 - job_name: kafka-lag
@@ -49,7 +49,7 @@ Run exporter (Docker or JAR) exposing port **9999**.
 
 ---
 
-## Step 3 — Alert rule (`kafka-lag-rules.yml`)
+## Step 3-Alert rule (`kafka-lag-rules.yml`)
 
 ```yaml
 groups:
@@ -68,15 +68,15 @@ Load into Prometheus → **Rules** UI.
 
 ---
 
-## Step 4 — Simulate lag
+## Step 4-Simulate lag
 
-**Terminal 1** — continuous producer:
+**Terminal 1**-continuous producer:
 
 ```bat
 bin\windows\kafka-console-producer.bat --bootstrap-server localhost:9092 --topic orders
 ```
 
-**Terminal 2** — start consumer, then **stop** it (Ctrl+C):
+**Terminal 2**-start consumer, then **stop** it (Ctrl+C):
 
 ```bat
 bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic orders --group billing-svc
@@ -86,7 +86,7 @@ Keep producing. Lag should rise.
 
 ---
 
-## Step 5 — Observe alert
+## Step 5-Observe alert
 
 Within ~1–2 min, Alertmanager/Prometheus UI shows **ConsumerLagHigh** firing.
 
@@ -104,4 +104,4 @@ Restart consumer → lag drops → alert resolves.
 
 ## Best practice (slide 20)
 
-Alert on **lag-in-seconds**, not raw offset — offsets are not comparable across loads.
+Alert on **lag-in-seconds**, not raw offset-offsets are not comparable across loads.

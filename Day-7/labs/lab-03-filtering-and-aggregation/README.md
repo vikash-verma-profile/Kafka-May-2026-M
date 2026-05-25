@@ -1,8 +1,8 @@
-# Lab 03 — Filtering and Aggregation
+# Lab 03-Filtering and Aggregation
 
 **Objective:** Filter invalid order records, aggregate metrics by key, write results to an output topic, and verify with a console consumer.
 
-From **Kafka_Streams.pptx** — Slide 34.
+From **Kafka_Streams.pptx**-Slide 34.
 
 ---
 
@@ -22,7 +22,7 @@ From **Kafka_Streams.pptx** — Slide 34.
 
 ---
 
-## Step 1 — Sample event format (JSON string)
+## Step 1-Sample event format (JSON string)
 
 ```json
 {"orderId":"o-1","customerId":"c-9","amount":7500,"currency":"INR","valid":true}
@@ -32,7 +32,7 @@ Invalid examples: `null` value, missing `amount`, `amount < 0`, `valid:false`.
 
 ---
 
-## Step 2 — Create topics
+## Step 2-Create topics
 
 ```bat
 bin\windows\kafka-topics.bat --create --topic orders-raw --bootstrap-server localhost:9092 --partitions 6 --replication-factor 1
@@ -41,7 +41,7 @@ bin\windows\kafka-topics.bat --create --topic orders-metrics --bootstrap-server 
 
 ---
 
-## Step 3 — Filter invalid records
+## Step 3-Filter invalid records
 
 ```java
 KStream<String, String> orders = builder.stream("orders-raw");
@@ -59,7 +59,7 @@ KStream<String, String> valid = orders.filter((key, value) -> {
 
 ---
 
-## Step 4 — High-value filter (slide 35)
+## Step 4-High-value filter (slide 35)
 
 ```java
 KStream<String, String> highValue = valid.filter((k, v) -> {
@@ -72,7 +72,7 @@ Route critical events to `orders-critical` with `.to("orders-critical")` if desi
 
 ---
 
-## Step 5 — Aggregate by customer
+## Step 5-Aggregate by customer
 
 ```java
 KTable<String, Double> totalByCustomer = valid
@@ -90,10 +90,10 @@ totalByCustomer.toStream()
 
 ---
 
-## Step 6 — Verify
+## Step 6-Verify
 
 1. Produce mix of valid/invalid/high-value JSON to `orders-raw`.
-2. Consume `orders-metrics` — totals per `customerId` should increase.
+2. Consume `orders-metrics`-totals per `customerId` should increase.
 3. Confirm invalid lines never appear in aggregates.
 
 ```bat
@@ -126,4 +126,4 @@ bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic
 |-------|-----|
 | Aggregate always zero | JSON parse path wrong; log filtered stream |
 | Repartition storm | Use `groupBy` only after `map` to correct key |
-| Duplicate metrics | New `application.id` resets state — use fixed id |
+| Duplicate metrics | New `application.id` resets state-use fixed id |

@@ -1,4 +1,4 @@
-# Lab 03 — JDBC Sink Design Answers
+# Lab 03-JDBC Sink Design Answers
 
 Copy to `design-answers.md` and fill in during the lab.
 

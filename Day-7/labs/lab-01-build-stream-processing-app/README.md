@@ -1,8 +1,8 @@
-# Lab 01 — Build a Stream Processing Application
+# Lab 01-Build a Stream Processing Application
 
 **Objective:** Create a Kafka Streams project, configure `StreamsConfig`, define input/output topics, implement a simple topology, and verify output.
 
-From **Kafka_Streams.pptx** — Slide 27.
+From **Kafka_Streams.pptx**-Slide 27.
 
 ---
 
@@ -24,7 +24,7 @@ Create topics: [scripts/create-streams-topics.bat](../scripts/create-streams-top
 
 ---
 
-## Step 1 — Maven project
+## Step 1-Maven project
 
 ```xml
 <dependency>
@@ -38,7 +38,7 @@ Match version to your broker when possible.
 
 ---
 
-## Step 2 — Create topics
+## Step 2-Create topics
 
 ```bat
 cd %KAFKA_HOME%
@@ -48,7 +48,7 @@ bin\windows\kafka-topics.bat --create --topic streams-output --bootstrap-server 
 
 ---
 
-## Step 3 — StreamsConfig
+## Step 3-StreamsConfig
 
 ```java
 Properties props = new Properties();
@@ -62,7 +62,7 @@ props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getCla
 
 ---
 
-## Step 4 — Topology (uppercase transform)
+## Step 4-Topology (uppercase transform)
 
 ```java
 StreamsBuilder builder = new StreamsBuilder();
@@ -78,7 +78,7 @@ Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
 
 ---
 
-## Step 5 — Produce test data
+## Step 5-Produce test data
 
 **Terminal 2:**
 
@@ -90,7 +90,7 @@ Type: `hello kafka streams`
 
 ---
 
-## Step 6 — Verify output
+## Step 6-Verify output
 
 **Terminal 3:**
 
@@ -102,7 +102,7 @@ bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic
 
 ---
 
-## Step 7 — Inspect application metadata
+## Step 7-Inspect application metadata
 
 ```bat
 bin\windows\kafka-consumer-groups.bat --bootstrap-server localhost:9092 --list

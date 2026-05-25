@@ -2,13 +2,13 @@
 
 **Objective:** Find partition directories on disk, list segment files, and dump `.log`, `.index`, and `.timeindex` with `kafka-dump-log`.
 
-From **Kafka_Storage_Internals_Replication.pptx** — Slide 8.
+From **Kafka_Storage_Internals_Replication.pptx**-Slide 8.
 
 ---
 
 ## Prerequisites
 
-- [Lab 00](../lab-00-initial-setup/README.md) — single broker on `localhost:9092`
+- [Lab 00](../lab-00-initial-setup/README.md)-single broker on `localhost:9092`
 - `KAFKA_HOME` set
 - Know your `log.dirs` path (default: `C:\kafka-data\kraft-combined-logs`)
 

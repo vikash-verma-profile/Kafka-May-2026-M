@@ -14,7 +14,7 @@ import org.apache.kafka.streams.kstream.TimeWindows;
 import org.apache.kafka.streams.kstream.Windowed;
 
 /**
- * Lab 04 — mini project: validate orders, branch invalid/high-value, windowed regional totals.
+ * Lab 04-mini project: validate orders, branch invalid/high-value, windowed regional totals.
  *
  * <p>Run: mvn -q exec:java -Dexec.mainClass=com.training.kafka.streams.lab04.OrderPipelineApp
  */

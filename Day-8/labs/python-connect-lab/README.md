@@ -14,10 +14,10 @@ pip install -r requirements.txt
 
 | Script | Lab |
 |--------|-----|
-| `deploy_connector.py` | 02, 04, 07 — POST connector config |
-| `connect_status.py` | 06, 07 — GET status |
-| `produce_orders.py` | 04 — seed orders-topic |
-| `verify_topic.py` | 06 — consume postgres-orders |
+| `deploy_connector.py` | 02, 04, 07-POST connector config |
+| `connect_status.py` | 06, 07-GET status |
+| `produce_orders.py` | 04-seed orders-topic |
+| `verify_topic.py` | 06-consume postgres-orders |
 
 ## Examples
 

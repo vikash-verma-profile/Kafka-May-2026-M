@@ -1,4 +1,4 @@
-# Day 7 — Kafka Streams Labs
+# Day 7-Kafka Streams Labs
 
 Hands-on labs from **Kafka_Streams.pptx**. Discussion exercises from the deck are noted in each lab where relevant.
 

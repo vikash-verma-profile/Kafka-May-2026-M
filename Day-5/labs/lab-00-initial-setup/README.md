@@ -1,6 +1,6 @@
 # Lab 00 - Initial Setup (Day 5 Storage & Replication)
 
-**Objective:** Prepare Kafka for Day 5 labs — single broker for storage/retention labs, and optionally a 3-broker cluster for replication labs.
+**Objective:** Prepare Kafka for Day 5 labs-single broker for storage/retention labs, and optionally a 3-broker cluster for replication labs.
 
 Complete this once before Lab 01–07.
 
@@ -48,7 +48,7 @@ Adjust the path if your folder name differs.
 
 ## Step 3A - Single broker (Labs 01, 02, 05, 06)
 
-**Terminal 1** — keep open:
+**Terminal 1**-keep open:
 
 ```bat
 cd %KAFKA_HOME%
@@ -63,9 +63,9 @@ Wait for `Kafka Server started`.
 log.dirs=C:\kafka-data\kraft-combined-logs
 ```
 
-If your install uses a different path, open `config\server.properties` and note `log.dirs` — you need it in Lab 01.
+If your install uses a different path, open `config\server.properties` and note `log.dirs`-you need it in Lab 01.
 
-**Terminal 2 — verify:**
+**Terminal 2-verify:**
 
 ```bat
 bin\windows\kafka-broker-api-versions.bat --bootstrap-server localhost:9092

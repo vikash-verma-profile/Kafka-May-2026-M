@@ -1,8 +1,8 @@
-# Lab 07 — Broker Failure Drill
+# Lab 07-Broker Failure Drill
 
 **Objective:** Kill a broker during continuous produce with `acks=all` and confirm no data loss.
 
-From **Kafka_Security_Monitoring.pptx** — Slide 28. **Time:** ~30 min.
+From **Kafka_Security_Monitoring.pptx**-Slide 28. **Time:** ~30 min.
 
 ---
 
@@ -13,7 +13,7 @@ From **Kafka_Security_Monitoring.pptx** — Slide 28. **Time:** ~30 min.
 
 ---
 
-## Step 1 — Create resilient topic
+## Step 1-Create resilient topic
 
 ```bat
 bin\windows\kafka-topics.bat --create --topic drill-orders ^
@@ -32,7 +32,7 @@ bin\windows\kafka-topics.bat --describe --topic drill-orders --bootstrap-server 
 
 ---
 
-## Step 2 — Continuous producer (`acks=all`)
+## Step 2-Continuous producer (`acks=all`)
 
 ```properties
 acks=all
@@ -50,7 +50,7 @@ bin\windows\kafka-producer-perf-test.bat --topic drill-orders ^
 
 ---
 
-## Step 3 — Kill broker-2
+## Step 3-Kill broker-2
 
 Stop the broker-2 process (close its CMD window or `taskkill`).
 
@@ -61,7 +61,7 @@ Watch Grafana (Lab 06):
 
 ---
 
-## Step 4 — Verify producer
+## Step 4-Verify producer
 
 **Expected:**
 
@@ -70,7 +70,7 @@ Watch Grafana (Lab 06):
 
 ---
 
-## Step 5 — Restore broker
+## Step 5-Restore broker
 
 Restart broker-2. Monitor URP return to **0**.
 
@@ -82,7 +82,7 @@ ISR should include all replicas again.
 
 ---
 
-## Step 6 — Consumer verification
+## Step 6-Consumer verification
 
 Consume from beginning; count records matches producer send count (within idempotent semantics).
 

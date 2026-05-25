@@ -1,5 +1,5 @@
 """
-Lab 04 — mini order pipeline: invalid branch, high-value alerts, regional totals.
+Lab 04-mini order pipeline: invalid branch, high-value alerts, regional totals.
 
 Run: python lab04_order_pipeline.py
 """

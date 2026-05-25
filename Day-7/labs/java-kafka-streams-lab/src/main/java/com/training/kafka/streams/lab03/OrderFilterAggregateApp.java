@@ -13,7 +13,7 @@ import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 
 /**
- * Lab 03 — filter valid orders and aggregate total amount per customer.
+ * Lab 03-filter valid orders and aggregate total amount per customer.
  *
  * <p>Run: mvn -q exec:java -Dexec.mainClass=com.training.kafka.streams.lab03.OrderFilterAggregateApp
  */

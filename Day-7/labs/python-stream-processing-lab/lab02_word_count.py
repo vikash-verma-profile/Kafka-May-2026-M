@@ -1,5 +1,5 @@
 """
-Lab 02 — word count with in-process state (sentences -> word-counts).
+Lab 02-word count with in-process state (sentences -> word-counts).
 
 Run: python lab02_word_count.py
 """

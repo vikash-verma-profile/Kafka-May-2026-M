@@ -1,8 +1,8 @@
-# Lab 07 — Drive Connect with curl
+# Lab 07-Drive Connect with curl
 
 **Objective:** List, deploy, inspect, restart, and delete connectors using the Kafka Connect REST API.
 
-From **Kafka_Connect_API.pptx** — Slide 38.
+From **Kafka_Connect_API.pptx**-Slide 38.
 
 ---
 
@@ -22,7 +22,7 @@ From **Kafka_Connect_API.pptx** — Slide 38.
 
 ---
 
-## Step 1 — List connectors
+## Step 1-List connectors
 
 ```bash
 curl -s http://localhost:8083/connectors | jq
@@ -32,7 +32,7 @@ curl -s http://localhost:8083/connectors | jq
 
 ---
 
-## Step 2 — Deploy connector
+## Step 2-Deploy connector
 
 ```bash
 curl -X POST -H "Content-Type: application/json" \
@@ -44,7 +44,7 @@ curl -X POST -H "Content-Type: application/json" \
 
 ---
 
-## Step 3 — Inspect status
+## Step 3-Inspect status
 
 ```bash
 curl -s http://localhost:8083/connectors/postgres-orders-source/status | jq
@@ -60,11 +60,11 @@ Look for:
 }
 ```
 
-**Partial failure:** connector `RUNNING` but task `FAILED` — restart individual task (Step 5).
+**Partial failure:** connector `RUNNING` but task `FAILED`-restart individual task (Step 5).
 
 ---
 
-## Step 4 — Get / update config
+## Step 4-Get / update config
 
 ```bash
 curl -s http://localhost:8083/connectors/postgres-orders-source/config | jq
@@ -80,7 +80,7 @@ curl -X PUT -H "Content-Type: application/json" \
 
 ---
 
-## Step 5 — Restart failed task
+## Step 5-Restart failed task
 
 ```bash
 curl -X POST http://localhost:8083/connectors/postgres-orders-source/tasks/0/restart
@@ -94,7 +94,7 @@ curl -X POST http://localhost:8083/connectors/postgres-orders-source/restart
 
 ---
 
-## Step 6 — Pause and resume
+## Step 6-Pause and resume
 
 ```bash
 curl -X PUT http://localhost:8083/connectors/postgres-orders-source/pause
@@ -103,7 +103,7 @@ curl -X PUT http://localhost:8083/connectors/postgres-orders-source/resume
 
 ---
 
-## Step 7 — Delete connector
+## Step 7-Delete connector
 
 ```bash
 curl -X DELETE http://localhost:8083/connectors/postgres-orders-source
@@ -111,7 +111,7 @@ curl -X DELETE http://localhost:8083/connectors/postgres-orders-source
 
 ---
 
-## Discussion — CI/CD safety (slide 38)
+## Discussion-CI/CD safety (slide 38)
 
 | Operation | CI-safe? | Notes |
 |-----------|----------|-------|

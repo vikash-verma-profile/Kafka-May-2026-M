@@ -2,13 +2,13 @@
 
 **Objective:** Load a partition with many records, dump sparse indexes, and see how offset → byte position mapping works.
 
-From **Kafka_Storage_Internals_Replication.pptx** — Slide 10.
+From **Kafka_Storage_Internals_Replication.pptx**-Slide 10.
 
 ---
 
 ## Prerequisites
 
-- [Lab 00](../lab-00-initial-setup/README.md) — single broker
+- [Lab 00](../lab-00-initial-setup/README.md)-single broker
 - [Lab 01](../lab-01-inspect-log-files/README.md) recommended (same tools)
 
 ---
@@ -18,8 +18,8 @@ From **Kafka_Storage_Internals_Replication.pptx** — Slide 10.
 | Setting | Default | Effect |
 |---------|---------|--------|
 | `log.index.interval.bytes` | 4096 | New index entry about every 4 KB of log data |
-| Sparse index | — | Not every offset is indexed; binary search + sequential scan |
-| `kafka-producer-perf-test` | — | Fast way to load test data |
+| Sparse index |-| Not every offset is indexed; binary search + sequential scan |
+| `kafka-producer-perf-test` |-| Fast way to load test data |
 
 ---
 
@@ -118,7 +118,7 @@ To see multiple segments on disk:
 bin\windows\kafka-configs.bat --bootstrap-server localhost:9092 --entity-type topics --entity-name index-lab --alter --add-config segment.ms=10000
 ```
 
-Produce more messages, wait 10+ seconds, list `index-lab-0` again — new `00000000000xxxxxxx.log` files may appear.
+Produce more messages, wait 10+ seconds, list `index-lab-0` again-new `00000000000xxxxxxx.log` files may appear.
 
 ---
 

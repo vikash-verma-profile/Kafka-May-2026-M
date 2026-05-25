@@ -1,8 +1,8 @@
-# Lab 03 — Design a JDBC Sink Pipeline
+# Lab 03-Design a JDBC Sink Pipeline
 
 **Objective:** Design connector configuration to stream `orders` from Kafka into a PostgreSQL analytics table.
 
-From **Kafka_Connect_API.pptx** — Slide 19.
+From **Kafka_Connect_API.pptx**-Slide 19.
 
 ---
 
@@ -31,7 +31,7 @@ auto.create=true
 
 ---
 
-## Step 1 — Complete the design document
+## Step 1-Complete the design document
 
 Answer in `design-answers.md` (create in this folder):
 
@@ -57,7 +57,7 @@ Sink adds nullable columns. For production, prefer controlled migrations + `auto
 
 ### 3. `tasks.max` for 6 partitions?
 
-Set **`tasks.max=6`** (one task per partition max). **Not 12** — Connect caps tasks at partition count; extra tasks stay idle.
+Set **`tasks.max=6`** (one task per partition max). **Not 12**-Connect caps tasks at partition count; extra tasks stay idle.
 
 ### 4. DLQ vs fail connector?
 
@@ -77,7 +77,7 @@ errors.deadletterqueue.context.headers.enable=true
 
 ---
 
-## Step 2 — Full proposed config
+## Step 2-Full proposed config
 
 ```json
 {
@@ -101,7 +101,7 @@ errors.deadletterqueue.context.headers.enable=true
 
 ---
 
-## Step 3 — Optional: deploy and test
+## Step 3-Optional: deploy and test
 
 If you have Connect + Postgres:
 

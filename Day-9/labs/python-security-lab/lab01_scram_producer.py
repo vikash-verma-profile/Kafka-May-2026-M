@@ -1,5 +1,5 @@
 """
-Lab 01 — produce with SASL/SCRAM (PLAIN or SCRAM listener).
+Lab 01-produce with SASL/SCRAM (PLAIN or SCRAM listener).
 
 Requires client-scram.properties and SCRAM user on broker.
 

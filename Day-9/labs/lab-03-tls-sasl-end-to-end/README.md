@@ -1,8 +1,8 @@
-# Lab 03 — End-to-End TLS + SASL
+# Lab 03-End-to-End TLS + SASL
 
 **Objective:** Generate keystores, configure `SASL_SSL` listener, and produce/consume over encrypted SCRAM.
 
-From **Kafka_Security_Monitoring.pptx** — Slide 14. **Time:** ~30 min.
+From **Kafka_Security_Monitoring.pptx**-Slide 14. **Time:** ~30 min.
 
 ---
 
@@ -13,7 +13,7 @@ From **Kafka_Security_Monitoring.pptx** — Slide 14. **Time:** ~30 min.
 
 ---
 
-## Step 1 — Generate broker keystore
+## Step 1-Generate broker keystore
 
 ```bat
 keytool -genkey -alias kafka -keyalg RSA -keystore kafka.keystore.jks ^
@@ -23,7 +23,7 @@ keytool -genkey -alias kafka -keyalg RSA -keystore kafka.keystore.jks ^
 
 ---
 
-## Step 2 — Create CA and truststore (lab self-signed)
+## Step 2-Create CA and truststore (lab self-signed)
 
 ```bat
 keytool -export -alias kafka -file kafka.crt -keystore kafka.keystore.jks -storepass changeit
@@ -34,7 +34,7 @@ Copy `kafka.truststore.jks` to clients.
 
 ---
 
-## Step 3 — Broker `server.properties`
+## Step 3-Broker `server.properties`
 
 ```properties
 listeners=SASL_SSL://:9093
@@ -51,7 +51,7 @@ Adjust paths for Windows: `C:\kafka-config\kafka.keystore.jks`.
 
 ---
 
-## Step 4 — Client properties
+## Step 4-Client properties
 
 ```properties
 security.protocol=SASL_SSL
@@ -63,7 +63,7 @@ sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule require
 
 ---
 
-## Step 5 — Restart broker and test
+## Step 5-Restart broker and test
 
 ```bat
 bin\windows\kafka-console-producer.bat --bootstrap-server localhost:9093 ^
@@ -72,7 +72,7 @@ bin\windows\kafka-console-producer.bat --bootstrap-server localhost:9093 ^
 
 ---
 
-## Step 6 — Verify TLS handshake
+## Step 6-Verify TLS handshake
 
 ```bat
 openssl s_client -connect localhost:9093

@@ -12,7 +12,7 @@ import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 
 /**
- * Lab 02 — real-time word count: sentences → word-counts.
+ * Lab 02-real-time word count: sentences → word-counts.
  *
  * <p>Run: mvn -q exec:java -Dexec.mainClass=com.training.kafka.streams.lab02.WordCountApp
  */

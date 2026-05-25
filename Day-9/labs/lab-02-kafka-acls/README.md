@@ -1,14 +1,14 @@
-# Lab 02 — kafka-acls: Grant & Revoke
+# Lab 02-kafka-acls: Grant & Revoke
 
 **Objective:** Grant produce/consume ACLs to different principals, verify access, then revoke and confirm denial.
 
-From **Kafka_Security_Monitoring.pptx** — Slide 11. **Time:** ~25 min.
+From **Kafka_Security_Monitoring.pptx**-Slide 11. **Time:** ~25 min.
 
 ---
 
 ## Prerequisites
 
-- [Lab 01](../lab-01-sasl-scram-authentication/README.md) — SCRAM users `alice`, `bob`
+- [Lab 01](../lab-01-sasl-scram-authentication/README.md)-SCRAM users `alice`, `bob`
 - Broker with authorizer enabled:
 
 ```properties
@@ -21,7 +21,7 @@ Restart broker after enabling ACLs.
 
 ---
 
-## Step 1 — Allow alice to write `orders`
+## Step 1-Allow alice to write `orders`
 
 ```bat
 bin\windows\kafka-acls.bat --bootstrap-server localhost:9093 ^
@@ -32,7 +32,7 @@ bin\windows\kafka-acls.bat --bootstrap-server localhost:9093 ^
 
 ---
 
-## Step 2 — Allow bob to read `orders` with group `billing-svc`
+## Step 2-Allow bob to read `orders` with group `billing-svc`
 
 ```bat
 bin\windows\kafka-acls.bat --bootstrap-server localhost:9093 ^
@@ -50,7 +50,7 @@ Bob also needs **Describe** on group (Kafka 2.0+):
 
 ---
 
-## Step 3 — List ACLs
+## Step 3-List ACLs
 
 ```bat
 bin\windows\kafka-acls.bat --bootstrap-server localhost:9093 ^
@@ -60,7 +60,7 @@ bin\windows\kafka-acls.bat --bootstrap-server localhost:9093 ^
 
 ---
 
-## Step 4 — Verify access
+## Step 4-Verify access
 
 | User | Action | Expected |
 |------|--------|----------|
@@ -70,7 +70,7 @@ bin\windows\kafka-acls.bat --bootstrap-server localhost:9093 ^
 
 ---
 
-## Step 5 — Revoke alice write
+## Step 5-Revoke alice write
 
 ```bat
 bin\windows\kafka-acls.bat --bootstrap-server localhost:9093 ^
@@ -91,6 +91,6 @@ Produce as alice again → **TopicAuthorizationException**.
 
 ---
 
-## Reference — common operations
+## Reference-common operations
 
 Read, Write, Create, Delete, Describe, Alter (topics); Read, Describe (groups).

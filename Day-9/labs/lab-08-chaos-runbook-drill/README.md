@@ -1,8 +1,8 @@
-# Lab 08 — Chaos & Runbook Drill
+# Lab 08-Chaos & Runbook Drill
 
 **Objective:** Inject a network partition, measure alert time, follow a runbook, and document gaps.
 
-From **Kafka_Security_Monitoring.pptx** — Slide 31. **Time:** ~40 min.
+From **Kafka_Security_Monitoring.pptx**-Slide 31. **Time:** ~40 min.
 
 ---
 
@@ -14,25 +14,25 @@ From **Kafka_Security_Monitoring.pptx** — Slide 31. **Time:** ~40 min.
 
 ---
 
-## Step 1 — Prepare runbook
+## Step 1-Prepare runbook
 
 Create `runbook-broker-partition.md`:
 
-1. **Detect** — alert name, dashboard link
-2. **Triage** — check URP, offline partitions, controller
-3. **Mitigate** — isolate network / restart broker
-4. **Recover** — verify ISR, consumer lag
-5. **Escalate** — when to page platform team
+1. **Detect**-alert name, dashboard link
+2. **Triage**-check URP, offline partitions, controller
+3. **Mitigate**-isolate network / restart broker
+4. **Recover**-verify ISR, consumer lag
+5. **Escalate**-when to page platform team
 
 ---
 
-## Step 2 — Baseline health
+## Step 2-Baseline health
 
 Confirm all brokers RUNNING, URP=0, active controller=1.
 
 ---
 
-## Step 3 — Inject partition (Linux example)
+## Step 3-Inject partition (Linux example)
 
 Block broker-1 ↔ broker-2 on port 9092:
 
@@ -45,7 +45,7 @@ sudo iptables -A OUTPUT -d <broker-2-ip> -j DROP
 
 ---
 
-## Step 4 — Time to alert
+## Step 4-Time to alert
 
 Start timer. **SLO target:** alert fires in **< 2 minutes** (per slide).
 
@@ -59,13 +59,13 @@ Record:
 
 ---
 
-## Step 5 — Execute runbook
+## Step 5-Execute runbook
 
 Follow steps without improvising. Note any missing command or unclear ownership.
 
 ---
 
-## Step 6 — Restore connectivity
+## Step 6-Restore connectivity
 
 ```bash
 sudo iptables -F
@@ -75,12 +75,12 @@ Verify cluster healed: URP=0, all brokers in ISR, consumers catching up.
 
 ---
 
-## Step 7 — Post-incident notes
+## Step 7-Post-incident notes
 
 Answer:
 
-1. **One runbook gap** — what was missing?
-2. **One alert that did not fire** — false negative?
+1. **One runbook gap**-what was missing?
+2. **One alert that did not fire**-false negative?
 
 ---
 

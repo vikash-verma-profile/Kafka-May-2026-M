@@ -1,8 +1,8 @@
-# Lab 04 — JMX + Prometheus Exporter
+# Lab 04-JMX + Prometheus Exporter
 
 **Objective:** Attach `jmx_prometheus_javaagent` to a broker and scrape metrics into Prometheus.
 
-From **Kafka_Security_Monitoring.pptx** — Slide 19. **Time:** ~25 min.
+From **Kafka_Security_Monitoring.pptx**-Slide 19. **Time:** ~25 min.
 
 ---
 
@@ -14,13 +14,13 @@ From **Kafka_Security_Monitoring.pptx** — Slide 19. **Time:** ~25 min.
 
 ---
 
-## Step 1 — Download jmx_exporter
+## Step 1-Download jmx_exporter
 
 Get `jmx_prometheus_javaagent-*.jar` and `kafka-2_0_0.yml` rules file.
 
 ---
 
-## Step 2 — Attach Java agent to broker
+## Step 2-Attach Java agent to broker
 
 Before starting broker:
 
@@ -29,11 +29,11 @@ set KAFKA_OPTS=-javaagent:C:\tools\jmx_prometheus_javaagent.jar=7071:C:\tools\ka
 bin\windows\kafka-server-start.bat config\broker-1.properties
 ```
 
-`kafka.yml` — use upstream example mapping Kafka MBeans to Prometheus names.
+`kafka.yml`-use upstream example mapping Kafka MBeans to Prometheus names.
 
 ---
 
-## Step 3 — Verify metrics endpoint
+## Step 3-Verify metrics endpoint
 
 ```bat
 curl http://localhost:7071/metrics
@@ -47,7 +47,7 @@ kafka_server_BrokerTopicMetrics_BytesInPerSec
 
 ---
 
-## Step 4 — Prometheus scrape config
+## Step 4-Prometheus scrape config
 
 ```yaml
 scrape_configs:
@@ -60,7 +60,7 @@ Reload Prometheus → **Targets** UI shows **UP**.
 
 ---
 
-## Step 5 — Grafana dashboard
+## Step 5-Grafana dashboard
 
 1. Add Prometheus datasource
 2. Import dashboard **7589** (Confluent Kafka)
@@ -78,4 +78,4 @@ Reload Prometheus → **Targets** UI shows **UP**.
 
 ## Why not scrape JMX directly? (slide 16)
 
-JMX is verbose; `jmx_exporter` exposes Prometheus text format — standard for alerting.
+JMX is verbose; `jmx_exporter` exposes Prometheus text format-standard for alerting.

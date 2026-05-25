@@ -1,4 +1,4 @@
-# Day 9 — Kafka Security & Monitoring Labs
+# Day 9-Kafka Security & Monitoring Labs
 
 Hands-on labs from **Kafka_Security_Monitoring.pptx**. Labs build on each other; use a **dedicated test cluster**, not production.
 

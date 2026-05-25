@@ -1,8 +1,8 @@
-# Lab 08 — Tune a Slow Connector
+# Lab 08-Tune a Slow Connector
 
 **Objective:** Diagnose a lagging JDBC source and apply `tasks.max`, batch, and producer tuning.
 
-From **Kafka_Connect_API.pptx** — Slide 45.
+From **Kafka_Connect_API.pptx**-Slide 45.
 
 ---
 
@@ -25,7 +25,7 @@ Lag: **hours** behind real time.
 
 ---
 
-## Step 1 — Capture baseline
+## Step 1-Capture baseline
 
 ```bash
 curl -s http://localhost:8083/connectors/postgres-orders-source/status | jq
@@ -38,9 +38,9 @@ Note JMX or Connect REST metrics if available:
 
 ---
 
-## Step 2 — Apply tuning knobs (in order)
+## Step 2-Apply tuning knobs (in order)
 
-### Knob 1 — Parallelism (try first)
+### Knob 1-Parallelism (try first)
 
 ```properties
 tasks.max=8
@@ -50,14 +50,14 @@ Match to **splittable source** (multiple tables/partitions). Re-deploy connector
 
 **Measure:** poll rate should increase if source allows parallel polls.
 
-### Knob 2 — JDBC batch size
+### Knob 2-JDBC batch size
 
 ```properties
 batch.max.rows=2000
 poll.interval.ms=2000
 ```
 
-### Knob 3 — Producer overrides
+### Knob 3-Producer overrides
 
 ```properties
 producer.override.batch.size=65536
@@ -67,7 +67,7 @@ producer.override.compression.type=lz4
 
 ---
 
-## Step 3 — Full tuned config excerpt
+## Step 3-Full tuned config excerpt
 
 ```json
 {
@@ -84,7 +84,7 @@ Update via PUT `/connectors/{name}/config`.
 
 ---
 
-## Step 4 — Measure impact
+## Step 4-Measure impact
 
 | Metric | Before | After |
 |--------|--------|-------|
@@ -98,7 +98,7 @@ Update via PUT `/connectors/{name}/config`.
 
 ### Which knob first?
 
-**`tasks.max`** — cheapest win if source can parallelize. Measure `source-record-poll-rate`.
+**`tasks.max`**-cheapest win if source can parallelize. Measure `source-record-poll-rate`.
 
 ### Second worker vs more tasks?
 
@@ -111,7 +111,7 @@ More tasks on one JVM won't help CPU-bound single-threaded work.
 
 ### Compression trade-off
 
-`lz4` reduces network/disk; consumers spend CPU decompressing — usually net positive for Kafka.
+`lz4` reduces network/disk; consumers spend CPU decompressing-usually net positive for Kafka.
 
 ---
 

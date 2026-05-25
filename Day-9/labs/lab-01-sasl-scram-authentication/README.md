@@ -1,8 +1,8 @@
-# Lab 01 — Configure SASL/SCRAM Authentication
+# Lab 01-Configure SASL/SCRAM Authentication
 
 **Objective:** Create a SCRAM user, enable a SASL listener on the broker, and produce a message with SCRAM credentials.
 
-From **Kafka_Security_Monitoring.pptx** — Slide 8. **Time:** ~20 min.
+From **Kafka_Security_Monitoring.pptx**-Slide 8. **Time:** ~20 min.
 
 ---
 
@@ -18,11 +18,11 @@ From **Kafka_Security_Monitoring.pptx** — Slide 8. **Time:** ~20 min.
 ## Prerequisites
 
 - Kafka broker (KRaft) with `kafka-configs` access
-- **Use a lab cluster** — not production
+- **Use a lab cluster**-not production
 
 ---
 
-## Step 1 — Create SCRAM user
+## Step 1-Create SCRAM user
 
 ```bat
 cd %KAFKA_HOME%
@@ -40,7 +40,7 @@ bin\windows\kafka-configs.bat --bootstrap-server localhost:9092 ^
 
 ---
 
-## Step 2 — Enable SASL on broker
+## Step 2-Enable SASL on broker
 
 Edit `server.properties` (or `broker-1.properties`):
 
@@ -72,7 +72,7 @@ Create admin SCRAM user matching JAAS. Restart broker.
 
 ---
 
-## Step 3 — Client properties (`client-scram.properties`)
+## Step 3-Client properties (`client-scram.properties`)
 
 ```properties
 security.protocol=SASL_PLAINTEXT
@@ -84,7 +84,7 @@ sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule require
 
 ---
 
-## Step 4 — Create topic and produce
+## Step 4-Create topic and produce
 
 ```bat
 bin\windows\kafka-topics.bat --create --topic orders --bootstrap-server localhost:9093 ^

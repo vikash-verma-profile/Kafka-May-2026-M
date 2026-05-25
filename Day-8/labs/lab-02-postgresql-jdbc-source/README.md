@@ -1,8 +1,8 @@
-# Lab 02 — Configure PostgreSQL JDBC Source Connector
+# Lab 02-Configure PostgreSQL JDBC Source Connector
 
 **Objective:** Stream new rows from PostgreSQL into Kafka using the Confluent JDBC Source connector.
 
-From **Kafka_Connect_API.pptx** — Slides 16–17.
+From **Kafka_Connect_API.pptx**-Slides 16–17.
 
 ---
 
@@ -14,7 +14,7 @@ From **Kafka_Connect_API.pptx** — Slides 16–17.
 
 ---
 
-## Step 1 — Prepare PostgreSQL
+## Step 1-Prepare PostgreSQL
 
 ```sql
 CREATE DATABASE ordersdb;
@@ -30,7 +30,7 @@ INSERT INTO orders (customer_id, total) VALUES (1, 99.50), (2, 250.00);
 
 ---
 
-## Step 2 — Install JDBC connector plugin
+## Step 2-Install JDBC connector plugin
 
 1. Download [Kafka Connect JDBC](https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc) from Confluent Hub.
 2. Extract to `%KAFKA_HOME%\plugins\confluent-jdbc\` (or your `plugin.path`).
@@ -39,7 +39,7 @@ INSERT INTO orders (customer_id, total) VALUES (1, 99.50), (2, 250.00);
 
 ---
 
-## Step 3 — Connector JSON (`postgres-orders-source.json`)
+## Step 3-Connector JSON (`postgres-orders-source.json`)
 
 ```json
 {
@@ -63,7 +63,7 @@ Topic name: **`postgres-orders`** (`topic.prefix` + table name).
 
 ---
 
-## Step 4 — Deploy via REST API
+## Step 4-Deploy via REST API
 
 **Shell:**
 
@@ -81,7 +81,7 @@ python deploy_connector.py ..\configs\postgres-orders-source.json
 
 ---
 
-## Step 5 — Verify status
+## Step 5-Verify status
 
 ```bash
 curl -s http://localhost:8083/connectors/postgres-orders-source/status | jq
@@ -91,7 +91,7 @@ curl -s http://localhost:8083/connectors/postgres-orders-source/status | jq
 
 ---
 
-## Step 6 — Insert new rows and consume
+## Step 6-Insert new rows and consume
 
 ```sql
 INSERT INTO orders (customer_id, total) VALUES (3, 1200.00);

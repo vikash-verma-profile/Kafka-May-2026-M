@@ -1,4 +1,4 @@
-# Day 8 Lab 06 — generate INSERT load for PostgreSQL orders table
+# Day 8 Lab 06-generate INSERT load for PostgreSQL orders table
 param(
     [int]$Count = 500,
     [string]$Host = "localhost",

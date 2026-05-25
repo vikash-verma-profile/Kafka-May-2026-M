@@ -1,5 +1,5 @@
 """
-Lab 01 — Python stream processor: uppercase values (streams-input -> streams-output).
+Lab 01-Python stream processor: uppercase values (streams-input -> streams-output).
 
 Kafka Streams is JVM-only; this uses a consumer/producer loop with the same topology idea.
 

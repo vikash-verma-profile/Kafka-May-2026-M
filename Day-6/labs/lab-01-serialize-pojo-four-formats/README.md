@@ -1,8 +1,8 @@
-# Lab 01 — Serialize a POJO in Four Formats
+# Lab 01-Serialize a POJO in Four Formats
 
 **Objective:** Serialize the same `Employee` object (id, name, email) using JSON, XML, Avro, and Protobuf; compare byte sizes and round-trip equality.
 
-From **Seralization.pptx** — Slide 13.
+From **Seralization.pptx**-Slide 13.
 
 ---
 
@@ -24,7 +24,7 @@ Or use [scripts/run-lab01.bat](../scripts/run-lab01.bat) (Java).
 
 ---
 
-## Step 1 — Create the Employee model
+## Step 1-Create the Employee model
 
 Create a Maven project (or use a `labs/java-serialization-lab` module) with:
 
@@ -41,7 +41,7 @@ Sample instance: `new Employee(101, "Asha", "a@x.io")`.
 
 ---
 
-## Step 2 — Add dependencies (`pom.xml`)
+## Step 2-Add dependencies (`pom.xml`)
 
 | Format | Dependency |
 |--------|------------|
@@ -52,7 +52,7 @@ Sample instance: `new Employee(101, "Asha", "a@x.io")`.
 
 ---
 
-## Step 3 — JSON serialization
+## Step 3-JSON serialization
 
 ```java
 ObjectMapper mapper = new ObjectMapper();
@@ -64,7 +64,7 @@ Write `employee.json.bin` and print `jsonBytes.length`.
 
 ---
 
-## Step 4 — XML serialization
+## Step 4-XML serialization
 
 Annotate `Employee` with JAXB (`@XmlRootElement`, `@XmlElement`) or use Jackson XML.
 
@@ -78,7 +78,7 @@ byte[] xmlBytes = out.toByteArray();
 
 ---
 
-## Step 5 — Avro schema and serialization
+## Step 5-Avro schema and serialization
 
 Create `src/main/avro/employee.avsc`:
 
@@ -108,7 +108,7 @@ byte[] avroBytes = out.toByteArray();
 
 ---
 
-## Step 6 — Protobuf schema and serialization
+## Step 6-Protobuf schema and serialization
 
 Create `employee.proto`:
 
@@ -126,7 +126,7 @@ Run `protoc` to generate Java, build message, call `employeeProto.toByteArray()`
 
 ---
 
-## Step 7 — Compare and verify
+## Step 7-Compare and verify
 
 | Format | Expected size (approx.) |
 |--------|-------------------------|
@@ -137,7 +137,7 @@ Run `protoc` to generate Java, build message, call `employeeProto.toByteArray()`
 
 Assert `equals()` after each deserialize path.
 
-**Optional:** Open bytes in a hex viewer — JSON/XML are readable; Avro/Protobuf are binary.
+**Optional:** Open bytes in a hex viewer-JSON/XML are readable; Avro/Protobuf are binary.
 
 ---
 

@@ -1,8 +1,8 @@
-# Lab 05 — Build an SMT Chain
+# Lab 05-Build an SMT Chain
 
 **Objective:** Chain Single Message Transforms to rename fields, drop metadata, and add an ingest timestamp.
 
-From **Kafka_Connect_API.pptx** — Slide 30.
+From **Kafka_Connect_API.pptx**-Slide 30.
 
 ---
 
@@ -13,7 +13,7 @@ From **Kafka_Connect_API.pptx** — Slide 30.
 
 ---
 
-## Step 1 — Sample source record
+## Step 1-Sample source record
 
 ```json
 {
@@ -25,7 +25,7 @@ From **Kafka_Connect_API.pptx** — Slide 30.
 
 ---
 
-## Step 2 — SMT configuration
+## Step 2-SMT configuration
 
 ```properties
 transforms=RenameKey,DropMeta,AddTimestamp
@@ -44,7 +44,7 @@ Add this block to your connector `config` JSON (source or sink side).
 
 ---
 
-## Step 3 — Deploy and test
+## Step 3-Deploy and test
 
 1. Add SMTs to an existing JDBC source or file-based test connector.
 2. Consume output topic and verify shape:
@@ -59,11 +59,11 @@ Add this block to your connector `config` JSON (source or sink side).
 
 ---
 
-## Step 4 — Discussion answers
+## Step 4-Discussion answers
 
 ### Order: what if `AddTimestamp` runs before `DropMeta`?
 
-`_meta` still present when timestamp added — final record may still include `_meta` if `DropMeta` runs after. **Correct order:** rename → drop `_meta` → add timestamp.
+`_meta` still present when timestamp added-final record may still include `_meta` if `DropMeta` runs after. **Correct order:** rename → drop `_meta` → add timestamp.
 
 ### When is an SMT the wrong tool?
 
@@ -86,7 +86,7 @@ Append to `transforms` list: `transforms=RenameKey,DropMeta,AddTimestamp,RouteTo
 
 ---
 
-## Reference — common SMTs (slide 29)
+## Reference-common SMTs (slide 29)
 
 | SMT | Purpose |
 |-----|---------|

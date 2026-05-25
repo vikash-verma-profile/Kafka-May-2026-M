@@ -1,8 +1,8 @@
-# Lab 02 — Real-Time Word Count
+# Lab 02-Real-Time Word Count
 
 **Objective:** Read sentences from a topic, split into words, count per word, publish counts to an output topic.
 
-From **Kafka_Streams.pptx** — Slides 32–33.
+From **Kafka_Streams.pptx**-Slides 32–33.
 
 ---
 
@@ -22,7 +22,7 @@ From **Kafka_Streams.pptx** — Slides 32–33.
 
 ---
 
-## Step 1 — Create topics
+## Step 1-Create topics
 
 ```bat
 bin\windows\kafka-topics.bat --create --topic sentences --bootstrap-server localhost:9092 --partitions 3 --replication-factor 1
@@ -31,7 +31,7 @@ bin\windows\kafka-topics.bat --create --topic word-counts --bootstrap-server loc
 
 ---
 
-## Step 2 — Topology
+## Step 2-Topology
 
 ```java
 KStream<String, String> sentences = builder.stream("sentences");
@@ -49,7 +49,7 @@ Flow: **Input → flatMapValues → groupBy → count → Output**
 
 ---
 
-## Step 3 — Application config
+## Step 3-Application config
 
 ```java
 props.put(StreamsConfig.APPLICATION_ID_CONFIG, "wordcount-app");
@@ -60,7 +60,7 @@ Requires broker 2.5+ and `read_committed` if downstream consumers use transactio
 
 ---
 
-## Step 4 — Run and feed data
+## Step 4-Run and feed data
 
 **Producer:**
 
@@ -84,7 +84,7 @@ bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic
 
 ---
 
-## Step 5 — Observe state store (optional)
+## Step 5-Observe state store (optional)
 
 ```bat
 bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --list

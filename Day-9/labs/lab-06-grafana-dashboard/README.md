@@ -1,8 +1,8 @@
-# Lab 06 — Grafana Dashboard Build
+# Lab 06-Grafana Dashboard Build
 
 **Objective:** Build a cluster overview dashboard with health stats, throughput, lag heatmap, and Alertmanager annotations.
 
-From **Kafka_Security_Monitoring.pptx** — Slide 24. **Time:** ~30 min.
+From **Kafka_Security_Monitoring.pptx**-Slide 24. **Time:** ~30 min.
 
 ---
 
@@ -13,7 +13,7 @@ From **Kafka_Security_Monitoring.pptx** — Slide 24. **Time:** ~30 min.
 
 ---
 
-## Step 1 — Stat panels (top row)
+## Step 1-Stat panels (top row)
 
 | Panel | PromQL (example) |
 |-------|------------------|
@@ -26,7 +26,7 @@ From **Kafka_Security_Monitoring.pptx** — Slide 24. **Time:** ~30 min.
 
 ---
 
-## Step 2 — Throughput time series
+## Step 2-Throughput time series
 
 ```promql
 topk(10, sum by (topic) (rate(kafka_server_BrokerTopicMetrics_BytesInPerSec[1m])))
@@ -36,17 +36,17 @@ Duplicate panel for `BytesOutPerSec`.
 
 ---
 
-## Step 3 — Consumer lag heatmap
+## Step 3-Consumer lag heatmap
 
 ```promql
 kafka_consumergroup_group_lag_seconds
 ```
 
-Visualization: **Heatmap** — axes: consumer group × partition.
+Visualization: **Heatmap**-axes: consumer group × partition.
 
 ---
 
-## Step 4 — Alertmanager annotations
+## Step 4-Alertmanager annotations
 
 1. Configure Grafana **Alertmanager** datasource
 2. Dashboard settings → **Annotations** → add Alertmanager source
@@ -54,7 +54,7 @@ Visualization: **Heatmap** — axes: consumer group × partition.
 
 ---
 
-## Step 5 — Export dashboards-as-code
+## Step 5-Export dashboards-as-code
 
 **Dashboard settings → JSON Model → Save to file**
 
@@ -73,4 +73,4 @@ Commit to `Day-9/labs/dashboards/kafka-cluster-overview.json`.
 
 ## SLO tie-in (slide 25)
 
-Define consumer-facing SLOs (e.g. p99 end-to-end < 5s) and page on **symptoms**: lag, error rate, URP — not CPU alone.
+Define consumer-facing SLOs (e.g. p99 end-to-end < 5s) and page on **symptoms**: lag, error rate, URP-not CPU alone.

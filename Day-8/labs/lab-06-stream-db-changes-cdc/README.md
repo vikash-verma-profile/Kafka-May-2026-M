@@ -1,8 +1,8 @@
-# Lab 06 — Stream DB Changes into Kafka
+# Lab 06-Stream DB Changes into Kafka
 
 **Objective:** Generate database load, observe records in Kafka, verify connector status and offsets.
 
-From **Kafka_Connect_API.pptx** — Slide 36.
+From **Kafka_Connect_API.pptx**-Slide 36.
 
 ---
 
@@ -14,7 +14,7 @@ From **Kafka_Connect_API.pptx** — Slide 36.
 
 ---
 
-## Step 1 — Start connector
+## Step 1-Start connector
 
 Ensure `postgres-orders-source` (or Debezium `pg-source`) is **RUNNING**:
 
@@ -24,7 +24,7 @@ curl -s http://localhost:8083/connectors/postgres-orders-source/status | jq
 
 ---
 
-## Step 2 — Generate load
+## Step 2-Generate load
 
 Run a script inserting ~100 orders/sec for 2–3 minutes.
 
@@ -47,7 +47,7 @@ FROM generate_series(1, 500);
 
 ---
 
-## Step 3 — Observe Kafka topic
+## Step 3-Observe Kafka topic
 
 ```bat
 bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic postgres-orders --from-beginning --max-messages 20
@@ -57,7 +57,7 @@ Confirm steady flow during load.
 
 ---
 
-## Step 4 — Verify connector offset progress
+## Step 4-Verify connector offset progress
 
 ```bash
 curl -s http://localhost:8083/connectors/postgres-orders-source/status | jq '.tasks[].id'
@@ -73,16 +73,16 @@ High-water mark should advance after load stops.
 
 ---
 
-## Step 5 — Tail Connect worker logs
+## Step 5-Tail Connect worker logs
 
 Look for:
 
-- `WARN` / `ERROR` — connection pool, serialization
+- `WARN` / `ERROR`-connection pool, serialization
 - Poll rate metrics: `source-record-poll-rate`
 
 ---
 
-## Step 6 — Debezium variant (optional)
+## Step 6-Debezium variant (optional)
 
 If using Debezium:
 
@@ -108,4 +108,4 @@ Compare poll-based JDBC (inserts only) vs log-based CDC (slide 35).
 |-------|-----|
 | Lag grows | Increase `tasks.max`, tune `poll.interval.ms` (Lab 08) |
 | Duplicate keys | Expected at-least-once; sink must upsert |
-| No DELETE events | JDBC cannot — switch to Debezium |
+| No DELETE events | JDBC cannot-switch to Debezium |

@@ -1,4 +1,4 @@
-# Day 8 — Kafka Connect & API Integration Labs
+# Day 8-Kafka Connect & API Integration Labs
 
 Hands-on labs from **Kafka_Connect_API.pptx**.
 

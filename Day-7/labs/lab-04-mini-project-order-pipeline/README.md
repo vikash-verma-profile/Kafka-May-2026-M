@@ -1,8 +1,8 @@
-# Lab 04 — Mini Project: Real-Time Order Processing Pipeline
+# Lab 04-Mini Project: Real-Time Order Processing Pipeline
 
 **Objective:** Build an end-to-end pipeline: ingest orders, validate, aggregate sales, detect high-value orders, emit analytics.
 
-From **Kafka_Streams.pptx** — Slides 36–38.
+From **Kafka_Streams.pptx**-Slides 36–38.
 
 ---
 
@@ -38,7 +38,7 @@ Order Producer → orders (topic)
 
 ---
 
-## Step 1 — Topics
+## Step 1-Topics
 
 | Topic | Purpose |
 |-------|---------|
@@ -55,7 +55,7 @@ for %%T in (orders order-analytics high-value-orders invalid-orders) do (
 
 ---
 
-## Step 2 — Order producer
+## Step 2-Order producer
 
 Generate events with fields: `orderId`, `customerId`, `region`, `amount`, `timestamp`, `sku`.
 
@@ -65,14 +65,14 @@ Run producer in a loop or use a small Java `OrderProducer` class.
 
 ---
 
-## Step 3 — Streams topology
+## Step 3-Streams topology
 
 Implement:
 
-1. **Validation** — `filter` valid; `branch` invalid to `invalid-orders`
-2. **High-value** — `amount >= 5000` → `high-value-orders`
-3. **Aggregation** — `groupBy` region → `count` + `aggregate` sum of amount → `order-analytics`
-4. **Windowing (stretch)** — 1-minute tumbling window for hourly-style demo:
+1. **Validation**-`filter` valid; `branch` invalid to `invalid-orders`
+2. **High-value**-`amount >= 5000` → `high-value-orders`
+3. **Aggregation**-`groupBy` region → `count` + `aggregate` sum of amount → `order-analytics`
+4. **Windowing (stretch)**-1-minute tumbling window for hourly-style demo:
 
 ```java
 valid.groupBy((k, v) -> region)
@@ -82,7 +82,7 @@ valid.groupBy((k, v) -> region)
 
 ---
 
-## Step 4 — Suggested features (slide 38)
+## Step 4-Suggested features (slide 38)
 
 | Feature | Implementation hint |
 |---------|---------------------|
@@ -93,7 +93,7 @@ valid.groupBy((k, v) -> region)
 
 ---
 
-## Step 5 — Run integration test
+## Step 5-Run integration test
 
 1. Start Streams app (`order-pipeline-app`).
 2. Start analytics consumer on `order-analytics`.
@@ -103,7 +103,7 @@ valid.groupBy((k, v) -> region)
 
 ---
 
-## Step 6 — Fault tolerance check (optional, slide 30)
+## Step 6-Fault tolerance check (optional, slide 30)
 
 1. Kill Streams process mid-run.
 2. Restart with same `application.id`.

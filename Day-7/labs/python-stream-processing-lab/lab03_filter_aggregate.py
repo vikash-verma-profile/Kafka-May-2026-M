@@ -1,5 +1,5 @@
 """
-Lab 03 — filter valid orders and aggregate totals per customer.
+Lab 03-filter valid orders and aggregate totals per customer.
 
 Run: python lab03_filter_aggregate.py
 """

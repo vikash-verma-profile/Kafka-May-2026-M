@@ -1,4 +1,4 @@
-# Lab 01 — Component Mapping (Answer Key)
+# Lab 01-Component Mapping (Answer Key)
 
 | Config line | Component |
 |-------------|-----------|
