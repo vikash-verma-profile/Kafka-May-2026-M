@@ -8,10 +8,10 @@ From **Seralization.pptx** — Slide 14.
 
 ## Implementation
 
-| Track | Command |
-|-------|---------|
-| **Java** | `mvn -q exec:java -Dexec.mainClass=com.training.kafka.lab02.FormatBenchmark` in [java-serialization-lab](../../java-serialization-lab/) |
-| **Python** | `python lab02_format_benchmark.py` in [python-serialization-lab](../../python-serialization-lab/) |
+| Track | Directory | Command |
+|-------|-----------|---------|
+| **Java** | `labs\java-serialization-lab` | `mvn -q exec:java "-Dexec.mainClass=com.training.kafka.lab02.FormatBenchmark"` |
+| **Python** | `labs\python-serialization-lab` | `python lab02_format_benchmark.py` |
 
 ---
 

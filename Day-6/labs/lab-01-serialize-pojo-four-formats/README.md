@@ -8,12 +8,14 @@ From **Seralization.pptx**-Slide 13.
 
 ## Implementation
 
-| Track | Command |
-|-------|---------|
-| **Java** | `cd java-serialization-lab` → `mvn -q exec:java -Dexec.mainClass=com.training.kafka.lab01.FourFormatsLab` |
-| **Python** | `cd python-serialization-lab` → `pip install -r requirements.txt` → `python lab01_four_formats.py` |
+Run from the lab project folder (see [labs/README.md](../README.md#project-layout-read-this-first)).
 
-Or use [scripts/run-lab01.bat](../scripts/run-lab01.bat) (Java).
+| Track | Directory | Command |
+|-------|-----------|---------|
+| **Java** | `labs\java-serialization-lab` | `mvn -q exec:java "-Dexec.mainClass=com.training.kafka.lab01.FourFormatsLab"` |
+| **Python** | `labs\python-serialization-lab` | `pip install -r requirements.txt` → `python lab01_four_formats.py` |
+
+Or [scripts/run-lab01.bat](../scripts/run-lab01.bat) (Java).
 
 ---
 

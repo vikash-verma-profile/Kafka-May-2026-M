@@ -4,118 +4,147 @@
 
 From **Seralization.pptx** — Slide 35.
 
+**Registry reference:** [SCHEMA-REGISTRY.md](../SCHEMA-REGISTRY.md)
+
 ---
 
-## Implementation
+## Run this lab (ordered steps)
+
+### A — Automated demo (Java)
+
+```powershell
+cd C:\Users\om\Desktop\KafKa\Day-6\labs\java-serialization-lab
+mvn -q exec:java "-Dexec.mainClass=com.training.kafka.lab06.SchemaEvolutionDemo"
+```
+
+**Expected output:**
+
+```text
+Sent evolved record: {"id": 99, "name": "Evolved-Employee", "dept": "Sales", "salary": 60000.0}
+Verify versions: curl http://localhost:8081/subjects/employees-avro-value/versions
+```
+
+This sends **one** new Kafka message. Schema may still be **v1** until you register v2 (step B).
 
 | Track | Command |
 |-------|---------|
-| **Java** | `mvn -q exec:java -Dexec.mainClass=com.training.kafka.lab06.SchemaEvolutionDemo` |
-| **Python** | `python lab06_schema_evolution.py` then re-run Lab 05 consumer |
+| **Java** | above |
+| **Python** | `python lab06_schema_evolution.py` in `labs\python-serialization-lab` |
+
+### B — Register schema v2 (add `email`)
+
+File: `java-serialization-lab\src\main\avro\employee_v2.avsc`
+
+```powershell
+cd C:\Users\om\Desktop\KafKa\Day-6\labs\scripts
+.\register-schema-v2.bat
+```
+
+Or see [scripts/README.md](../scripts/README.md) for PowerShell `Invoke-RestMethod` if the batch file fails.
+
+**Verify in browser:**
+
+http://localhost:8081/subjects/employees-avro-value/versions
+
+**Expected:** `[1, 2]`
+
+View v2 JSON: http://localhost:8081/subjects/employees-avro-value/versions/2
+
+### C — Optional: read evolved message
+
+Lab 05 consumer reads **10** records per run. After only one new message, it may print **one** line (`id=99`) then idle.
+
+```powershell
+mvn -q exec:java "-Dexec.mainClass=com.training.kafka.lab05.AvroConsumer"
+```
+
+`Ctrl+C` → **`Y`** if it hangs before 10 lines.
+
+### D — Breaking change + alias (classroom / optional)
+
+| Step | Action | Expected |
+|------|--------|----------|
+| 3 | Rename `dept` → `department` without alias | HTTP **409** from Registry |
+| 4 | Register with `"aliases": ["dept"]` | New version; `/versions` → `[1, 2, 3]` |
+
+### E — Deliverable
+
+Copy or edit [evolution-notes.md](evolution-notes.md).
 
 ---
 
 ## Prerequisites
 
-- Labs 04–05 complete (`employees-avro` subject exists)
-- [confluent-local](../../confluent-local/) running — Schema Registry `http://localhost:8081`, Kafka `localhost:9092`
+- Labs 04–05 complete
+- [confluent-local](../../confluent-local/) running
+- Baseline: http://localhost:8081/subjects/employees-avro-value/versions → `[1]`
 
 ---
 
-## Step 1 — Baseline (v1)
+## Schema Registry — what you should see
 
-Current schema: `{ id, name, dept, salary }`. Confirm:
+| Stage | `/subjects` | `/versions` |
+|-------|-------------|-------------|
+| After Lab 04 | `["employees-avro-value"]` | `[1]` |
+| After demo only | same | often still `[1]` |
+| After v2 register | same | `[1, 2]` |
+| After alias exercise | same | `[1, 2, 3]` |
 
-```bash
-curl http://localhost:8081/subjects/employees-avro-value/versions
-```
-
-**Expected:** `[1]` (or higher if you re-ran Lab 4)
+Subject name **`employees-avro-value`** = value schema for topic **`employees-avro`**. Not an error.
 
 ---
 
-## Step 2 — Evolve to v2 (add `email` with default)
+## Step details (slides)
 
-Update `employee.avsc`:
+### Step 1 — Baseline (v1)
+
+Fields: `id`, `name`, `dept`, `salary`. Versions URL shows `[1]`.
+
+### Step 2 — v2 with `email`
 
 ```json
 {"name": "email", "type": "string", "default": ""}
 ```
 
-Re-run producer with new field; or POST schema manually:
+Old consumers still read old messages; `email` defaults to `""`.
 
-```bash
-curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
-  --data @employee-v2.avsc \
-  http://localhost:8081/subjects/employees-avro-value/versions
-```
+### Step 3 — Breaking rename
 
-**Verify:** Lab 05 consumer still reads **old** messages (email defaults to `""`).
+`dept` → `department` without alias → **409** `IncompatibleSchema` (BACKWARD).
 
----
-
-## Step 3 — Breaking change: rename `dept` → `department`
-
-Change field name without alias. Register or produce with new schema.
-
-**Expected:** HTTP **409** `IncompatibleSchema` from Registry (BACKWARD compatibility failure).
-
-```bash
-curl -i -X POST ...  # observe 409 in response
-```
-
----
-
-## Step 4 — Fix with Avro alias
+### Step 4 — Fix with alias
 
 ```json
 {"name": "department", "type": "string", "aliases": ["dept"]}
 ```
 
-Register successfully. Versions should include v2 (email) and v3 (department alias).
+### Step 5 — Compatibility API (optional)
 
-```bash
-curl http://localhost:8081/subjects/employees-avro-value/versions
+```powershell
+# POST proposed schema to compatibility endpoint (see Confluent docs)
 ```
-
-**Expected:** `[1,2,3]` (exact numbers may vary)
-
----
-
-## Step 5 — Compatibility API (optional)
-
-Test a proposed schema before deploy:
-
-```bash
-curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
-  -d '{"schema": "..."}' \
-  "http://localhost:8081/compatibility/subjects/employees-avro-value/versions/latest"
-```
-
----
-
-## Step 6 — Deliverable writeup
-
-Document in `evolution-notes.md` (or your lab journal):
-
-| Change | Compatible? | Why |
-|--------|-------------|-----|
-| Add `email` with default `""` | Yes (BACKWARD) | Old readers ignore new field; new readers get default for old data |
-| Rename `dept` → `department` | No | Avro treats as delete + add |
-| Rename with `aliases: ["dept"]` | Yes | Registry maps old field name |
 
 ---
 
 ## Checkpoint
 
-- [ ] v2 registered; old consumers still work
-- [ ] Breaking rename rejected with 409
-- [ ] Alias fix registers as new version
-- [ ] Short writeup completed
+- [ ] `SchemaEvolutionDemo` sent `Evolved-Employee` (id 99)
+- [ ] `/versions` shows `[1, 2]` after v2
+- [ ] (Optional) 409 on bad rename; alias registers v3
+- [ ] [evolution-notes.md](evolution-notes.md) completed
 
 ---
 
-## Reference — compatibility types (slide 25)
+## Next — wrap up Day 6
+
+```powershell
+cd C:\Users\om\Desktop\KafKa\Day-6\confluent-local
+docker compose down
+```
+
+---
+
+## Reference — compatibility modes
 
 | Mode | Rule of thumb |
 |------|----------------|

@@ -19,10 +19,14 @@ Uses [confluent-local](../../confluent-local/) in this repo.
 
 ### Step 1 — Start the stack
 
+From **project root** (folder containing `confluent-local` and `labs`):
+
 ```powershell
-cd Day-6\confluent-local
+cd confluent-local
 docker compose up -d
 ```
+
+If you are already in `labs`: `cd ..\confluent-local` — do **not** use `cd Day-6\confluent-local` from inside `labs`.
 
 First run downloads images (~2–5 min). Later starts are faster.
 
@@ -43,9 +47,11 @@ Expect **Up** for: `zookeeper`, `kafka`, `schema-registry`, `control-center`.
 ### Step 3 — Verify Schema Registry
 
 ```powershell
-cd Day-6\labs\scripts
+cd ..\labs\scripts
 .\verify-schema-registry.bat
 ```
+
+Or from project root: `cd labs\scripts` then run the script.
 
 **Expected:**
 
@@ -62,7 +68,7 @@ Invoke-RestMethod http://localhost:8081/config
 ### Step 4 — Verify Kafka (optional)
 
 ```powershell
-cd Day-6\confluent-local
+cd ..\confluent-local
 docker compose exec kafka kafka-topics --bootstrap-server localhost:9092 --list
 ```
 
@@ -75,7 +81,7 @@ Open http://localhost:9021 to browse brokers, topics, and schemas after Lab 04.
 ### Stop when finished
 
 ```powershell
-cd Day-6\confluent-local
+cd confluent-local
 docker compose down
 ```
 
@@ -124,7 +130,7 @@ schema-registry-start etc/schema-registry/schema-registry.properties
 
 ## Checkpoint
 
-- [ ] `GET http://localhost:8081/subjects` returns 200 and `[]`
+- [ ] `GET http://localhost:8081/subjects` returns 200 and `[]` (empty — before Lab 04)
 - [ ] Default compatibility is `BACKWARD`
 - [ ] Kafka reachable on `localhost:9092` (Lab 04)
 - [ ] `_schemas` topic exists **or** will appear after first registration in Lab 4
@@ -133,7 +139,7 @@ schema-registry-start etc/schema-registry/schema-registry.properties
 
 ## Next lab
 
-[Lab 04 — Produce Avro messages](../lab-04-produce-avro-messages/README.md) (keep `docker compose` running).
+[Lab 04 — Produce Avro messages](../lab-04-produce-avro-messages/README.md) (keep `docker compose` running). After Lab 04, `/subjects` shows `employees-avro-value` — see [SCHEMA-REGISTRY.md](../SCHEMA-REGISTRY.md).
 
 ---
 
@@ -144,4 +150,6 @@ schema-registry-start etc/schema-registry/schema-registry.properties
 | Port 8081 or 9092 in use | `docker compose down` in other projects; stop standalone Kafka/Registry |
 | Registry cannot connect to Kafka | `docker compose ps` — restart: `docker compose up -d` |
 | `curl` hangs on Windows | Use `Invoke-RestMethod` or `verify-schema-registry.bat` |
+| `cd Day-6\confluent-local` fails from `labs` | Use `cd ..\confluent-local` or `cd confluent-local` from project root |
+| `no configuration file provided` (docker) | Run `docker compose` only inside `confluent-local` |
 | `_schemas` missing until first register | Normal — topic appears on first schema registration (Lab 4) |
