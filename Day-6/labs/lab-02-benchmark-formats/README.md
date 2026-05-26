@@ -18,6 +18,7 @@ From **Seralization.pptx** — Slide 14.
 ## Prerequisites
 
 - [Lab 01](../lab-01-serialize-pojo-four-formats/README.md) completed (reusable serializers)
+- No Kafka broker required
 
 ---
 

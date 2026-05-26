@@ -19,8 +19,8 @@ Or use [scripts/run-lab01.bat](../scripts/run-lab01.bat) (Java).
 
 ## Prerequisites
 
-- Java JDK 17+, Maven 3.8+
-- IDE or terminal for a small Maven module
+- Java JDK 17+, Maven 3.8+ **or** Python 3.10+ (see implementation table)
+- No Kafka broker required — this lab runs offline
 
 ---
 

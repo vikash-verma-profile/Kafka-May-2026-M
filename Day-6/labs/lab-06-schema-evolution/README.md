@@ -18,7 +18,7 @@ From **Seralization.pptx** — Slide 35.
 ## Prerequisites
 
 - Labs 04–05 complete (`employees-avro` subject exists)
-- Schema Registry on `http://localhost:8081`
+- [confluent-local](../../confluent-local/) running — Schema Registry `http://localhost:8081`, Kafka `localhost:9092`
 
 ---
 

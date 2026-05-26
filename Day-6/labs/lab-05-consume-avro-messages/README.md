@@ -18,7 +18,9 @@ From **Seralization.pptx** — Slides 30–31.
 ## Prerequisites
 
 - [Lab 04](../lab-04-produce-avro-messages/README.md) — topic `employees-avro` with data
-- Schema Registry running on port 8081
+- [confluent-local](../../confluent-local/) stack running (`docker compose up -d`)
+- Schema Registry: `http://localhost:8081`
+- Kafka: `localhost:9092`
 
 ---
 

@@ -13,15 +13,18 @@ From **Seralization.pptx** — Slides 28–29.
 | **Java** | `mvn -q exec:java -Dexec.mainClass=com.training.kafka.lab04.AvroProducer` |
 | **Python** | `python lab04_avro_producer.py` |
 
-Both in their respective project folders under `Day-6/labs/`. Create topic first: [scripts/create-employees-avro-topic.bat](../scripts/create-employees-avro-topic.bat).
+Both in their respective project folders under `Day-6/labs/`.
+
+**Before producing:** create the topic (see Step 4).
 
 ---
 
 ## Prerequisites
 
-- [Lab 03](../lab-03-install-schema-registry/README.md) — Registry on `http://localhost:8081`
-- Kafka on `localhost:9092`
-- Maven project with Confluent Avro serdes
+- [Lab 03](../lab-03-install-schema-registry/README.md) — [confluent-local](../../confluent-local/) running (`docker compose up -d`)
+- Schema Registry: `http://localhost:8081`
+- Kafka: `localhost:9092`
+- Maven project with Confluent Avro serdes (Java) or `pip install -r requirements.txt` (Python)
 
 ---
 
@@ -41,7 +44,7 @@ Both in their respective project folders under `Day-6/labs/`. Create topic first
 }
 ```
 
-Add `avro-maven-plugin` to generate the Java class.
+Add `avro-maven-plugin` to generate the Java class (already in [java-serialization-lab](../../java-serialization-lab/)).
 
 ---
 
@@ -75,13 +78,34 @@ auto.register.schemas=true
 
 ## Step 4 — Create topic
 
-```bat
-cd %KAFKA_HOME%
-bin\windows\kafka-topics.bat --create ^
+**Recommended (Docker — no `KAFKA_HOME` required):**
+
+```powershell
+cd Day-6\labs\scripts
+.\create-employees-avro-topic.bat
+```
+
+The script uses `docker compose` in [confluent-local](../../confluent-local/) when `KAFKA_HOME` is not set.
+
+**Manual (from `confluent-local` folder):**
+
+```powershell
+cd Day-6\confluent-local
+docker compose exec kafka kafka-topics --create ^
   --topic employees-avro ^
   --bootstrap-server localhost:9092 ^
   --partitions 3 ^
   --replication-factor 1
+```
+
+If the topic already exists, you can continue.
+
+**Alternative — local Kafka install:**
+
+```bat
+set KAFKA_HOME=C:\kafka
+cd Day-6\labs\scripts
+.\create-employees-avro-topic.bat
 ```
 
 ---
@@ -106,28 +130,33 @@ producer.flush();
 producer.close();
 ```
 
+Or run the lab main class / Python script from the implementation table above.
+
 ---
 
 ## Step 6 — Verify Schema Registry
 
-```bash
-curl http://localhost:8081/subjects
+```powershell
+Invoke-RestMethod http://localhost:8081/subjects
 ```
 
 **Expected:** includes `employees-avro-value`
 
-```bash
-curl http://localhost:8081/subjects/employees-avro-value/versions
+```powershell
+Invoke-RestMethod http://localhost:8081/subjects/employees-avro-value/versions
 ```
 
 **Expected:** `[1]`
+
+Or use Control Center: http://localhost:9021 → Schema Registry.
 
 ---
 
 ## Step 7 — Inspect raw bytes (optional)
 
-```bat
-bin\windows\kafka-console-consumer.bat ^
+```powershell
+cd Day-6\confluent-local
+docker compose exec kafka kafka-console-consumer ^
   --bootstrap-server localhost:9092 ^
   --topic employees-avro ^
   --from-beginning ^
@@ -150,6 +179,8 @@ Wire format: magic byte `0x00` + 4-byte schema ID + Avro payload.
 
 | Issue | Fix |
 |-------|-----|
-| `UnknownHostException` for registry | Use `localhost:8081`, not container hostname |
+| `UnknownHostException` for registry | Use `http://localhost:8081` from host apps |
+| Connection refused to Kafka | `docker compose ps` in `confluent-local` |
 | `Schema being registered is incompatible` | Delete subject in dev or fix schema |
 | ClassNotFound for Avro serializer | Add `kafka-avro-serializer` dependency |
+| Topic creation fails | Topic may already exist — proceed to producer |
