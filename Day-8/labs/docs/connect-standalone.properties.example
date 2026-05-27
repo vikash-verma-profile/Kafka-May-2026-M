@@ -1,0 +1,19 @@
+# Copy relevant lines into:
+#   C:\kafka-bin\kafka_2.13-4.2.0\config\connect-standalone.properties
+#
+# Use FORWARD SLASHES in paths on Windows.
+
+bootstrap.servers=localhost:9092,localhost:9094,localhost:9095
+
+key.converter=org.apache.kafka.connect.json.JsonConverter
+value.converter=org.apache.kafka.connect.json.JsonConverter
+key.converter.schemas.enable=false
+value.converter.schemas.enable=false
+
+offset.storage.file.filename=C:/kafka-data/connect-offsets/connect.offsets
+offset.flush.interval.ms=10000
+
+# Parent plugins folder only (NOT lib, NOT a .jar path)
+plugin.path=C:/kafka-bin/kafka_2.13-4.2.0/plugins
+
+listeners=http://localhost:8083

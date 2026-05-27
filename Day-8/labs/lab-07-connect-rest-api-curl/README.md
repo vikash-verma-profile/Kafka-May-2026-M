@@ -34,6 +34,20 @@ curl -s http://localhost:8083/connectors | jq
 
 ## Step 2-Deploy connector
 
+**PowerShell** (from `labs` folder):
+
+```powershell
+.\scripts\deploy-connector.bat .\configs\mysql-orders-source.json http://localhost:8083
+```
+
+If you get **409** (connector already exists):
+
+```powershell
+curl.exe -X DELETE http://localhost:8083/connectors/mysql-orders-source
+```
+
+**bash/curl:**
+
 ```bash
 curl -X POST -H "Content-Type: application/json" \
   --data @mysql-orders-source.json \

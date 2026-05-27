@@ -4,7 +4,7 @@
     "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
     "connection.url": "jdbc:mysql://localhost:3306/ordersdb?useSSL=false&allowPublicKeyRetrieval=true",
     "connection.user": "root",
-    "connection.password": "root",
+    "connection.password": "Mindz@007",
     "table.whitelist": "orders",
     "mode": "incrementing",
     "incrementing.column.name": "id",
