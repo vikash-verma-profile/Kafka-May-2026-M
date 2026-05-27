@@ -8,18 +8,18 @@ From **Kafka_Connect_API.pptx**-Slide 36.
 
 ## Prerequisites
 
-- JDBC source (Lab 02) **or** Debezium PostgreSQL connector
+- JDBC source (Lab 02) **or** Debezium MySQL connector
 - Connect on port 8083
-- Topic e.g. `postgres-orders`
+- Topic e.g. `mysql-orders`
 
 ---
 
 ## Step 1-Start connector
 
-Ensure `postgres-orders-source` (or Debezium `pg-source`) is **RUNNING**:
+Ensure `mysql-orders-source` (or Debezium `mysql-source`) is **RUNNING**:
 
 ```bash
-curl -s http://localhost:8083/connectors/postgres-orders-source/status | jq
+curl -s http://localhost:8083/connectors/mysql-orders-source/status | jq
 ```
 
 ---
@@ -31,18 +31,13 @@ Run a script inserting ~100 orders/sec for 2–3 minutes.
 **PowerShell example:**
 
 ```powershell
-1..500 | ForEach-Object {
-  psql -U postgres -d ordersdb -c "INSERT INTO orders (customer_id, total) VALUES ($([int](Get-Random -Max 100)), $([decimal](Get-Random -Minimum 10 -Maximum 5000)));"
-  Start-Sleep -Milliseconds 10
-}
+.\scripts\load-orders.ps1 -Count 500
 ```
 
-**SQL loop (simpler):**
+Or manually:
 
-```sql
-INSERT INTO orders (customer_id, total)
-SELECT (random()*100)::int, (random()*5000)::numeric
-FROM generate_series(1, 500);
+```powershell
+mysql -u root -p ordersdb -e "INSERT INTO orders (customer_id, order_total) VALUES (1, 99.50);"
 ```
 
 ---
@@ -50,7 +45,7 @@ FROM generate_series(1, 500);
 ## Step 3-Observe Kafka topic
 
 ```bat
-bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic postgres-orders --from-beginning --max-messages 20
+bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic mysql-orders --from-beginning --max-messages 20
 ```
 
 Confirm steady flow during load.
@@ -60,7 +55,7 @@ Confirm steady flow during load.
 ## Step 4-Verify connector offset progress
 
 ```bash
-curl -s http://localhost:8083/connectors/postgres-orders-source/status | jq '.tasks[].id'
+curl -s http://localhost:8083/connectors/mysql-orders-source/status | jq '.tasks[].id'
 ```
 
 Inspect internal offset topic (distributed mode):
@@ -86,7 +81,7 @@ Look for:
 
 If using Debezium:
 
-1. Enable logical replication on PostgreSQL
+1. Enable binlog on MySQL (for Debezium)
 2. Connector emits **INSERT/UPDATE/DELETE** with before/after images
 3. Topics: `<server>.public.orders`
 

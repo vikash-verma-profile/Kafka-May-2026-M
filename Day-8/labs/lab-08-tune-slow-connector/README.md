@@ -28,7 +28,7 @@ Lag: **hours** behind real time.
 ## Step 1-Capture baseline
 
 ```bash
-curl -s http://localhost:8083/connectors/postgres-orders-source/status | jq
+curl -s http://localhost:8083/connectors/mysql-orders-source/status | jq
 ```
 
 Note JMX or Connect REST metrics if available:

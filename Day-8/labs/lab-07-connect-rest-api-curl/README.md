@@ -28,7 +28,7 @@ From **Kafka_Connect_API.pptx**-Slide 38.
 curl -s http://localhost:8083/connectors | jq
 ```
 
-**Expected:** `[]` or `["postgres-orders-source", ...]`
+**Expected:** `[]` or `["mysql-orders-source", ...]`
 
 ---
 
@@ -36,7 +36,7 @@ curl -s http://localhost:8083/connectors | jq
 
 ```bash
 curl -X POST -H "Content-Type: application/json" \
-  --data @postgres-orders-source.json \
+  --data @mysql-orders-source.json \
   http://localhost:8083/connectors
 ```
 
@@ -47,14 +47,14 @@ curl -X POST -H "Content-Type: application/json" \
 ## Step 3-Inspect status
 
 ```bash
-curl -s http://localhost:8083/connectors/postgres-orders-source/status | jq
+curl -s http://localhost:8083/connectors/mysql-orders-source/status | jq
 ```
 
 Look for:
 
 ```json
 {
-  "name": "postgres-orders-source",
+  "name": "mysql-orders-source",
   "connector": { "state": "RUNNING" },
   "tasks": [{ "id": 0, "state": "RUNNING" }]
 }
@@ -67,7 +67,7 @@ Look for:
 ## Step 4-Get / update config
 
 ```bash
-curl -s http://localhost:8083/connectors/postgres-orders-source/config | jq
+curl -s http://localhost:8083/connectors/mysql-orders-source/config | jq
 ```
 
 Update poll interval:
@@ -75,7 +75,7 @@ Update poll interval:
 ```bash
 curl -X PUT -H "Content-Type: application/json" \
   --data '{"connector.class":"...","poll.interval.ms":"2000", ...}' \
-  http://localhost:8083/connectors/postgres-orders-source/config
+  http://localhost:8083/connectors/mysql-orders-source/config
 ```
 
 ---
@@ -83,13 +83,13 @@ curl -X PUT -H "Content-Type: application/json" \
 ## Step 5-Restart failed task
 
 ```bash
-curl -X POST http://localhost:8083/connectors/postgres-orders-source/tasks/0/restart
+curl -X POST http://localhost:8083/connectors/mysql-orders-source/tasks/0/restart
 ```
 
 Restart entire connector:
 
 ```bash
-curl -X POST http://localhost:8083/connectors/postgres-orders-source/restart
+curl -X POST http://localhost:8083/connectors/mysql-orders-source/restart
 ```
 
 ---
@@ -97,8 +97,8 @@ curl -X POST http://localhost:8083/connectors/postgres-orders-source/restart
 ## Step 6-Pause and resume
 
 ```bash
-curl -X PUT http://localhost:8083/connectors/postgres-orders-source/pause
-curl -X PUT http://localhost:8083/connectors/postgres-orders-source/resume
+curl -X PUT http://localhost:8083/connectors/mysql-orders-source/pause
+curl -X PUT http://localhost:8083/connectors/mysql-orders-source/resume
 ```
 
 ---
@@ -106,7 +106,7 @@ curl -X PUT http://localhost:8083/connectors/postgres-orders-source/resume
 ## Step 7-Delete connector
 
 ```bash
-curl -X DELETE http://localhost:8083/connectors/postgres-orders-source
+curl -X DELETE http://localhost:8083/connectors/mysql-orders-source
 ```
 
 ---

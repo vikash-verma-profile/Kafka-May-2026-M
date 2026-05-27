@@ -1,6 +1,6 @@
 # Lab 03-Design a JDBC Sink Pipeline
 
-**Objective:** Design connector configuration to stream `orders` from Kafka into a PostgreSQL analytics table.
+**Objective:** Design connector configuration to stream `orders` from Kafka into a MySQL analytics table.
 
 From **Kafka_Connect_API.pptx**-Slide 19.
 
@@ -15,7 +15,7 @@ From **Kafka_Connect_API.pptx**-Slide 19.
 
 ## Scenario
 
-Your team streams `orders` from Kafka into Postgres table `analytics.orders_fact` for BI.
+Your team streams `orders` from Kafka into MySQL table `analytics.orders_fact` for BI.
 
 **Starter config:**
 
@@ -23,7 +23,7 @@ Your team streams `orders` from Kafka into Postgres table `analytics.orders_fact
 name=orders-sink
 connector.class=io.confluent.connect.jdbc.JdbcSinkConnector
 topics=orders
-connection.url=jdbc:postgresql://db:5432/analytics
+connection.url=jdbc:mysql://db:3306/analytics
 insert.mode=upsert
 pk.mode=record_key
 auto.create=true
@@ -85,9 +85,9 @@ errors.deadletterqueue.context.headers.enable=true
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
     "topics": "orders",
-    "connection.url": "jdbc:postgresql://localhost:5432/analytics",
-    "connection.user": "postgres",
-    "connection.password": "postgres",
+    "connection.url": "jdbc:mysql://localhost:3306/analytics?useSSL=false&allowPublicKeyRetrieval=true",
+    "connection.user": "root",
+    "connection.password": "root",
     "insert.mode": "upsert",
     "pk.mode": "record_key",
     "pk.fields": "orderId",
@@ -103,11 +103,11 @@ errors.deadletterqueue.context.headers.enable=true
 
 ## Step 3-Optional: deploy and test
 
-If you have Connect + Postgres:
+If you have Connect + MySQL:
 
 1. POST config to `http://localhost:8083/connectors`
 2. Produce 5 test messages to `orders`
-3. `SELECT * FROM orders_fact;` in Postgres
+3. `SELECT * FROM orders_fact;` in MySQL (`analytics` database)
 
 ---
 

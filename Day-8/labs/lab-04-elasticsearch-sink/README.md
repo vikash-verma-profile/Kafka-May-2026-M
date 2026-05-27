@@ -93,7 +93,7 @@ curl http://localhost:9200/orders-topic/_search?pretty
 
 ## End-to-end pipeline (slide 22)
 
-Optional chain: **PostgreSQL → JDBC Source → `pg.orders` → ES Sink → Elasticsearch**
+Optional chain: **MySQL → JDBC Source → `mysql-orders` → ES Sink → Elasticsearch**
 
 ---
 

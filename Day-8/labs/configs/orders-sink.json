@@ -3,9 +3,9 @@
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
     "topics": "orders",
-    "connection.url": "jdbc:postgresql://localhost:5432/analytics",
-    "connection.user": "postgres",
-    "connection.password": "postgres",
+    "connection.url": "jdbc:mysql://localhost:3306/analytics?useSSL=false&allowPublicKeyRetrieval=true",
+    "connection.user": "root",
+    "connection.password": "root",
     "insert.mode": "upsert",
     "pk.mode": "record_key",
     "pk.fields": "orderId",

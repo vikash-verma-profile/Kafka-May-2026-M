@@ -2,7 +2,7 @@
 Deploy a Kafka Connect connector from JSON config.
 
 Run:
-    python deploy_connector.py ../configs/postgres-orders-source.json
+    python deploy_connector.py ../configs/mysql-orders-source.json
 """
 
 from __future__ import annotations
