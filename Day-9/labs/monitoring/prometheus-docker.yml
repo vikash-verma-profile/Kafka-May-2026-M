@@ -1,0 +1,17 @@
+# Prometheus config when Prometheus runs inside Docker (Labs 04–06).
+# Scrapes metrics on the Windows/Linux HOST via host.docker.internal.
+
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: kafka-broker-jmx
+    static_configs:
+      - targets: ['host.docker.internal:7071']
+
+  - job_name: kafka-lag-exporter
+    static_configs:
+      - targets: ['host.docker.internal:9999']
+
+rule_files:
+  - alert-rules.yml

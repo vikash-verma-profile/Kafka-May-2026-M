@@ -23,6 +23,10 @@ cd C:\Users\om\Desktop\KafKa\Day-8\labs\lab-04-elasticsearch-sink\docker
 docker compose up -d
 ```
 
+**First run:** Compose may download large images (`docker.elastic.co/elasticsearch/kibana` 8.15.3) — allow several minutes on a slow link.
+
+If you see `Container lab04-elasticsearch Error dependency` and Kibana **Created** but not started, wait until ES is **healthy**, then run `docker compose up -d` again.
+
 Wait until healthy (first start often **1–3 minutes**):
 
 ```powershell
@@ -65,12 +69,20 @@ Kibana: open http://localhost:5601 → **Discover** → create data view `orders
 | Issue | Fix |
 | ----- | --- |
 | `dockerDesktopLinuxEngine` / cannot connect to Docker | Start **Docker Desktop**; wait until engine is running |
+| `unable to get image` during `compose up` | Docker engine not running — start Desktop, retry |
 | `elasticsearch` **unhealthy** | Wait 2–3 min; `docker compose logs elasticsearch`; `docker compose restart elasticsearch` |
 | `kibana` failed — `elasticsearch is unhealthy` | Fix ES first (`docker compose ps` → healthy); then `docker compose up -d kibana` |
 | Container exits / OOM | Increase Docker memory to 4 GB+ in Docker Desktop settings |
 | Port 9200 in use | Stop other ES instances or change host port in `docker-compose.yml` |
 | Kibana blank / curl empty reply | Still starting — wait 2–5 min; check `docker compose logs kibana` |
+| Kibana “Explore on my own” | Ready — proceed to Lab 04 Step 5 (data view) |
 | Connect cannot reach ES | Use `http://localhost:9200` (host) when Connect runs on Windows host, not in Docker |
+
+## Observations
+
+- Connect and Kafka run on the **host**; only ES/Kibana run in Docker — always use **localhost:9200** in connector config.
+- Verified: `curl.exe http://localhost:9200` returns cluster info when ES is healthy.
+- Kibana `curl.exe http://localhost:5601/api/status` may fail until startup completes; browser UI can still load later.
 
 ## Files
 

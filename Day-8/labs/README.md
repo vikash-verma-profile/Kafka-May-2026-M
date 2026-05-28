@@ -110,6 +110,7 @@ curl.exe -X DELETE http://localhost:8083/connectors/<connector-name>
 | ES connection refused | Start Docker Desktop; `lab-04-elasticsearch-sink\docker\start-lab04-es.bat` |
 | Docker pipe / engine not found | Docker Desktop not running |
 | Kibana won’t open | Wait 2–5 min after ES healthy; try http://127.0.0.1:5601 |
+| Python `KafkaTimeoutError` (Lab 04) | `produce_orders.py localhost:9092 orders-topic 5` — not multi-bootstrap; see [Lab 04](lab-04-elasticsearch-sink/README.md) |
 
 ## Suggested order
 

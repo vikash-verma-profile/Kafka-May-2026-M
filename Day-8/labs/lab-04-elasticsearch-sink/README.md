@@ -4,7 +4,22 @@
 
 From **Kafka_Connect_API.pptx** — Slides 23–24.
 
-**Tested with:** Java 17, Kafka 4.2, Elasticsearch 8.15 (Docker), Kafka Connect **standalone** on Windows.
+**Tested with:** Java 17, Kafka 4.2, Elasticsearch 8.15 (Docker), Kafka Connect **standalone** on Windows, **kafka-python 2.3.1**.
+
+---
+
+## Suggested flow (Windows)
+
+Do steps in this order — skipping plugin install or Docker causes the errors listed in [Troubleshooting](#troubleshooting).
+
+1. Start **Kafka cluster** (`start-kafka-cluster.bat`) and **Connect** (`connect-standalone.bat`).
+2. Start **Docker** Desktop → [Step 0](#step-0--start-elasticsearch--kibana-docker) (ES + Kibana).
+3. Install **Elasticsearch Connect plugin** → [Step 1](#step-1--install-elasticsearch-connect-plugin) → verify `/connector-plugins`.
+4. Confirm topic `orders-topic` exists → [Step 2](#step-2--seed-kafka-topic-orders-topic) (list/create).
+5. **Deploy** `es-orders-sink` → [Step 3](#step-3--deploy-sink-connector-es-orders-sinkjson) → status **RUNNING**.
+6. **Produce** JSON to `orders-topic` → [Step 2](#step-2--seed-kafka-topic-orders-topic) (after sink is up, or before — both work; re-run produce if ES was empty).
+7. **Verify** Elasticsearch `_search` → [Step 4](#step-4--verify-indexing-in-elasticsearch).
+8. **Kibana** data view → [Step 5](#step-5--kibana-visualization).
 
 ---
 
@@ -132,7 +147,27 @@ If deploy still returns **400** and the error **Available connector plugins** li
 
 ## Step 2 — Seed Kafka topic `orders-topic`
 
-**Create topic** (adjust bootstrap if using 3-broker cluster):
+### Verify Kafka cluster and topic (PowerShell)
+
+Run **`kafka-topics.bat` from the Kafka install directory**, not from `labs`:
+
+```powershell
+cd C:\kafka-bin\kafka_2.13-4.2.0
+bin\windows\kafka-topics.bat --bootstrap-server localhost:9092,localhost:9094,localhost:9095 --list
+```
+
+**Expected topics** (among others): `__consumer_offsets`, `mysql-orders`, `orders-topic`.
+
+You may see a Log4j line like `main ERROR Reconfiguration failed...` — **ignore it** if exit code is **0** and topic names print.
+
+| Port | Role |
+| ---- | ---- |
+| **9092**, **9094**, **9095** | Broker clients (`kafka-topics`, console tools, Connect) |
+| **9093** | KRaft **controller only** — do **not** use in producers or Python |
+
+**PowerShell note:** `cd /d C:\kafka-bin\...` is **cmd** syntax and fails in PowerShell. Use `cd C:\kafka-bin\kafka_2.13-4.2.0` only.
+
+### Create topic (if missing)
 
 ```bat
 cd /d C:\kafka-bin\kafka_2.13-4.2.0
@@ -141,7 +176,9 @@ bin\windows\kafka-topics.bat --create --topic orders-topic ^
   --partitions 3 --replication-factor 1
 ```
 
-**Option A — console producer:**
+If the topic already exists with replication factor 3, `--create` is not needed.
+
+**Option A — console producer** (from Kafka home):
 
 ```bat
 bin\windows\kafka-console-producer.bat --bootstrap-server localhost:9092 --topic orders-topic
@@ -159,8 +196,30 @@ Paste JSON lines:
 ```powershell
 cd C:\Users\om\Desktop\KafKa\Day-8\labs\python-connect-lab
 pip install -r requirements.txt
-python produce_orders.py localhost:9092 orders-topic 10
+python produce_orders.py localhost:9092 orders-topic 5
 ```
+
+**Argument order** (all three required if you pass any):
+
+```text
+python produce_orders.py <bootstrap> <topic> <count>
+```
+
+| Command | Result |
+| ------- | ------ |
+| `python produce_orders.py localhost:9092 orders-topic 5` | Correct |
+| `python produce_orders.py orders-topic 5` | **Wrong** — treats `orders-topic` as bootstrap → timeout |
+| `python produce_orders.py localhost:9092,localhost:9094,localhost:9095 orders-topic 5` | **Often fails** on Windows — `KafkaTimeoutError` after 60s |
+
+### kafka-python + Kafka 4.2 (observed)
+
+| Symptom | Cause | Fix |
+| ------- | ----- | --- |
+| `NoBrokersAvailable` | kafka-python cannot auto-detect Kafka **4.2** API | Use repo `produce_orders.py` + `config.py` (`api_version=(2, 8, 0)`) |
+| `KafkaTimeoutError` (60s) | Multi-broker bootstrap string in Python | Use **`localhost:9092` only** (one broker is enough for metadata) |
+| Slow first run (30–90s) | Normal with pinned `api_version` | Wait; success prints `Produced N records to orders-topic` |
+
+`kafka-topics --list` with three brokers can work while Python fails with the same three hosts — that is expected; use a **single** bootstrap for Python.
 
 ---
 
@@ -178,10 +237,15 @@ Config: [configs/es-orders-sink.json](../configs/es-orders-sink.json)
     "type.name": "_doc",
     "key.ignore": "true",
     "schema.ignore": "true",
-    "tasks.max": "2"
+    "tasks.max": "2",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false"
   }
 }
 ```
+
+`produce_orders.py` sends **string keys** (`o-0`, `o-1`, …). Do **not** use `JsonConverter` on keys — tasks fail with `Unrecognized token 'o'` and nothing new reaches Kibana.
 
 **Deploy (PowerShell from `labs`):**
 
@@ -193,6 +257,16 @@ curl.exe -X DELETE http://localhost:8083/connectors/es-orders-sink
 .\scripts\deploy-connector.bat .\configs\es-orders-sink.json http://localhost:8083
 .\scripts\connect-status.bat es-orders-sink http://localhost:8083
 ```
+
+**Success:** POST returns JSON with `"name":"es-orders-sink"` and `"tasks":[...]` (not an `error_code`).
+
+**Before ES plugin:** **400** with message `Failed to find any class ... ElasticsearchSinkConnector` and **Available** plugins listing only JDBC + built-ins (`FileStream`, `Mirror`, etc.).
+
+**After ES plugin + Connect restart:** same deploy returns connector config and task list; status **RUNNING**.
+
+**404** on `/connectors/es-orders-sink/status` means the connector was **never deployed** (or wrong name) — run POST deploy first.
+
+**409** means connector already exists — `DELETE` then redeploy.
 
 **Browser:**
 
@@ -248,30 +322,79 @@ For a quick Lab 04-only path, use `orders-topic` + `produce_orders.py` as in Ste
 
 ## Troubleshooting
 
+### Connect & deploy
+
 | Issue | Fix |
 | ----- | --- |
 | **400** `Failed to find any class ... ElasticsearchSinkConnector` and **Available** lists only `JdbcSource`, `JdbcSink`, `FileStream`, `Mirror` | **ES plugin not installed.** Add `plugins\confluent-elasticsearch\` from Confluent Hub (see Step 1). Restart Connect. Re-check `/connector-plugins`. |
 | `ElasticsearchSinkConnector` not found (400) | Same as above — separate folder from `confluent-jdbc`; `plugin.path=C:/.../plugins` with `/`; restart Connect |
 | **404** on `/connectors/es-orders-sink/status` | Connector not deployed yet — run Step 3 deploy first |
-| `Connection refused` to `:9200` | Start Docker ES: `docker compose up -d` in `lab-04-elasticsearch-sink\docker`; Docker Desktop running |
-| Kibana won’t load / `dependency failed to start: elasticsearch is unhealthy` | Wait for ES healthy (`docker compose ps`); `docker compose restart`; give Kibana 2–5 min |
-| Connector FAILED, ES unreachable | Connect on host must use `http://localhost:9200`, not `http://elasticsearch:9200` |
-| `mapper_parsing_exception` | Keep `schema.ignore=true` for schemaless JSON |
-| Index not created | Check Connect log; confirm ES up: `curl.exe http://localhost:9200` |
-| No documents in ES | Produce to `orders-topic` first; check connector status; topic name must match config |
-| HTTP 409 on deploy | `curl.exe -X DELETE http://localhost:8083/connectors/es-orders-sink` then redeploy |
-| Docker ES OOM / exits | Docker Desktop → 4 GB+ RAM; `docker compose logs elasticsearch` |
-| Kibana Discover empty | Create data view `orders-topic*`; produce messages **after** sink is RUNNING |
+| HTTP **409** on deploy | `curl.exe -X DELETE http://localhost:8083/connectors/es-orders-sink` then redeploy |
 | `deploy-connector.bat` not found (PowerShell) | Use `.\scripts\deploy-connector.bat` from `labs` folder |
-| `deploy-connector.bat` `: was unexpected at this time` | Run from `labs` with `.\scripts\...`; script echoes use escaped `^(` `^)` for cmd |
+| `deploy-connector.bat` `: was unexpected at this time` | Run from `labs` with `.\scripts\...` (not from another directory without path) |
+| Connector FAILED, ES unreachable | Connect on host must use `http://localhost:9200`, not `http://elasticsearch:9200` |
+
+### Docker, Elasticsearch, Kibana
+
+| Issue | Fix |
+| ----- | --- |
+| `dockerDesktopLinuxEngine` / pipe not found | Start **Docker Desktop**; wait until engine is **Running**; retry `docker compose up -d` |
+| `unable to get image` / cannot connect to Docker API | Same — Docker was not running when compose started |
+| `elasticsearch is unhealthy` / Kibana **Error dependency** | Wait 1–3 min; `docker compose ps`; `docker compose restart elasticsearch`; then `docker compose up -d` |
+| `Connection refused` to `:9200` | Start Docker ES in `lab-04-elasticsearch-sink\docker` |
+| Kibana blank / curl empty reply / slow browser | Wait **2–5 min** after ES healthy; try http://127.0.0.1:5601 |
+| Kibana welcome / “Explore on my own” | Kibana is up — create data view `orders-topic*` in Step 5 |
+| Kibana Discover empty | Create data view; produce to `orders-topic`; confirm sink **RUNNING** and `_search` has hits |
+| Docker ES OOM / exits | Docker Desktop → 4 GB+ RAM; `docker compose logs elasticsearch` |
+
+### Kafka & Python producers
+
+| Issue | Fix |
+| ----- | --- |
+| `kafka-topics.bat` not found from `labs` | `cd C:\kafka-bin\kafka_2.13-4.2.0` first |
+| `cd /d` fails in PowerShell | Use `cd C:\kafka-bin\kafka_2.13-4.2.0` (no `/d`) |
+| Log4j `Reconfiguration failed` on `--list` | Harmless if topics print and exit code 0 |
+| `NoBrokersAvailable` (Python) | Cluster down, or missing `api_version` in `produce_orders.py` / `config.py` |
+| `KafkaTimeoutError` 60s (Python) | Use `localhost:9092` only; not `9092,9094,9095`; not `9093` |
+| Wrong args `produce_orders.py orders-topic 5` | Use `produce_orders.py localhost:9092 orders-topic 5` |
+| `mapper_parsing_exception` | Keep `schema.ignore=true` for schemaless JSON |
+| No documents in ES / empty Kibana | Check task status — if **FAILED** with `Unrecognized token 'o'`, set `key.converter` to `StringConverter` (see config above), redeploy, re-produce |
+| Tasks FAILED `JsonParseException` token `o` | String keys + `JsonConverter` on key — use `StringConverter` for `key.converter` |
+| No documents in ES | Produce to `orders-topic`; connector tasks **RUNNING** (not just connector RUNNING); topic name matches config |
+| Kibana empty but `_search` has hits | Create data view `orders-topic*`; widen time range; refresh Discover |
 
 ### Useful commands
 
 ```powershell
-Invoke-RestMethod http://localhost:8083/connectors
+# Kafka — from C:\kafka-bin\kafka_2.13-4.2.0
+bin\windows\kafka-topics.bat --bootstrap-server localhost:9092,localhost:9094,localhost:9095 --list
+
+# Connect
+Invoke-RestMethod http://localhost:8083/connector-plugins |
+  Where-Object { $_.class -like '*elasticsearch*' }
 Invoke-RestMethod http://localhost:8083/connectors/es-orders-sink/status
+
+# Elasticsearch
 curl.exe "http://localhost:9200/orders-topic/_search?pretty"
+
+# Produce (from python-connect-lab)
+python produce_orders.py localhost:9092 orders-topic 5
 ```
+
+---
+
+## Observations from Windows lab runs
+
+Summary of behavior seen while completing this lab on a **3-broker KRaft** cluster (`9092` / `9094` / `9095`) with Connect on **8083**:
+
+| Area | Observation |
+| ---- | ------------- |
+| **Docker** | First `docker compose up` failed if Docker Desktop was off (`dockerDesktopLinuxEngine`). After starting Docker, images pulled (~several minutes). ES may show `unhealthy` briefly; Kibana waits on ES health. |
+| **Connect plugin** | Deploying `es-orders-sink` before installing `confluent-elasticsearch` always returned **400** with JDBC-only available plugins. After Hub install + Connect restart, deploy returned full connector JSON. |
+| **Kafka CLI** | `kafka-topics --list` with three bootstrap servers succeeded; topics included `orders-topic`. |
+| **kafka-python** | Same machine: `localhost:9092` produced records; `localhost:9092,localhost:9094,localhost:9095` often hit **60s metadata timeout**. Pinning `api_version` for Kafka 4.2 avoided `NoBrokersAvailable`. |
+| **Ports** | `Test-NetConnection` showed 9092, 9094, 9095 open; **9093** is controller-only and must not be used in client bootstrap strings. |
+| **Kibana** | Welcome screen after several minutes is normal; indexing visibility requires data view `orders-topic*` and messages on the topic. |
 
 ---
 

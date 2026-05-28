@@ -1,0 +1,36 @@
+# Optional monitoring stack for Labs 04–06.
+# Kafka broker + jmx_exporter stay on the HOST (not in this compose file).
+#
+# Start:  docker compose up -d
+# Stop:   docker compose down
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.51.2
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../monitoring/prometheus-docker.yml:/etc/prometheus/prometheus.yml:ro
+      - ../monitoring/alert-rules.yml:/etc/prometheus/alert-rules.yml:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  grafana:
+    image: grafana/grafana:10.4.2
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    depends_on:
+      - prometheus
+
+  kafka-lag-exporter:
+    image: seglo/kafka-lag-exporter:latest
+    ports:
+      - "9999:9999"
+    environment:
+      KAFKA_LAG_EXPORTER_CLUSTERS_0_NAME: local
+      KAFKA_LAG_EXPORTER_CLUSTERS_0_BOOTSTRAP_BROKERS: host.docker.internal:9092
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

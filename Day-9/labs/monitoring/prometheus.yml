@@ -1,3 +1,6 @@
+# Native Prometheus on the HOST (Windows/Linux install).
+# If Prometheus runs in Docker, use prometheus-docker.yml instead — see docker/README.md.
+
 global:
   scrape_interval: 15s
 

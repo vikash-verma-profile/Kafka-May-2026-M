@@ -7,7 +7,7 @@ import sys
 
 from kafka import KafkaProducer
 
-from config import DEFAULT_BOOTSTRAP
+from config import DEFAULT_BOOTSTRAP, KAFKA_API_VERSION, parse_bootstrap
 
 
 def main() -> None:
@@ -16,7 +16,11 @@ def main() -> None:
     count = int(sys.argv[3]) if len(sys.argv) > 3 else 10
 
     producer = KafkaProducer(
-        bootstrap_servers=bootstrap,
+        bootstrap_servers=parse_bootstrap(bootstrap),
+        api_version=KAFKA_API_VERSION,
+        # kafka-python + multi-bootstrap can hit 60s metadata timeout on Windows; 9092 alone is enough
+        request_timeout_ms=120_000,
+        max_block_ms=120_000,
         key_serializer=lambda k: k.encode("utf-8"),
         value_serializer=lambda v: json.dumps(v).encode("utf-8"),
     )

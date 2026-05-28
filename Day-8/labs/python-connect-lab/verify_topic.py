@@ -6,7 +6,7 @@ import sys
 
 from kafka import KafkaConsumer
 
-from config import DEFAULT_BOOTSTRAP
+from config import DEFAULT_BOOTSTRAP, KAFKA_API_VERSION, parse_bootstrap
 
 
 def main() -> None:
@@ -16,7 +16,9 @@ def main() -> None:
 
     consumer = KafkaConsumer(
         topic,
-        bootstrap_servers=bootstrap,
+        bootstrap_servers=parse_bootstrap(bootstrap),
+        api_version=KAFKA_API_VERSION,
+        request_timeout_ms=120_000,
         group_id="py-connect-verify",
         auto_offset_reset="earliest",
         consumer_timeout_ms=5000,
