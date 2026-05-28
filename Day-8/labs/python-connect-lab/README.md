@@ -1,45 +1,62 @@
 # Day 8 Python Connect Lab
 
-Python helpers for Kafka Connect REST API and topic verification.
+Python helpers for Kafka Connect REST API and Kafka topic verification.
 
-Uses connector JSON from [../configs](../configs/) (MySQL JDBC source).
+Configs: [../configs](../configs/) · Full setup: [Lab 02](../lab-02-postgresql-jdbc-source/README.md)
 
 ## Setup
 
 ```powershell
+cd C:\Users\om\Desktop\KafKa\Day-8\labs\python-connect-lab
 pip install -r requirements.txt
 ```
 
 ## Scripts
 
-| Script | Lab |
-| ------ | --- |
-| `deploy_connector.py` | 02, 04, 07 — POST connector config |
-| `connect_status.py` | 06, 07 — GET status |
-| `produce_orders.py` | 04 — seed orders-topic |
-| `verify_topic.py` | 06 — consume `mysql-orders` |
+| Script | Labs | Purpose |
+| ------ | ---- | ------- |
+| `deploy_connector.py` | 02, 03, 04, 05, 07, 08 | POST connector JSON |
+| `connect_status.py` | 06, 07 | GET connector list or status |
+| `produce_orders.py` | 03, 04 | Produce JSON to Kafka topic |
+| `verify_topic.py` | 06 | Consume from topic |
 
-## Examples (from `labs` folder)
+## Examples
+
+From `python-connect-lab` folder:
+
+```powershell
+# Lab 02 — deploy MySQL source
+python deploy_connector.py ..\configs\mysql-orders-source.json
+python connect_status.py http://localhost:8083 mysql-orders-source
+
+# Lab 03 — produce to topic "orders"
+python produce_orders.py localhost:9092 orders 5
+
+# Lab 04 — produce to orders-topic
+python produce_orders.py localhost:9092 orders-topic 10
+
+# Lab 06 — verify mysql-orders
+python verify_topic.py localhost:9092 mysql-orders 20
+```
+
+From `labs` folder (BAT alternative):
 
 ```powershell
 cd C:\Users\om\Desktop\KafKa\Day-8\labs
-
-# Delete first if you get HTTP 409
-curl.exe -X DELETE http://localhost:8083/connectors/mysql-orders-source
-
-python deploy_connector.py configs\mysql-orders-source.json
-python connect_status.py http://localhost:8083 mysql-orders-source
-python verify_topic.py localhost:9092 mysql-orders 10
-```
-
-Or use BAT scripts:
-
-```powershell
 .\scripts\deploy-connector.bat .\configs\mysql-orders-source.json http://localhost:8083
-.\scripts\connect-status.bat mysql-orders-source http://localhost:8083
 ```
+
+## Defaults (`config.py`)
+
+| Setting | Value |
+| ------- | ----- |
+| Connect URL | `http://localhost:8083` |
+| Bootstrap | `localhost:9092` |
+
+Override via command-line arguments on each script.
 
 ## Prerequisites
 
-- Connect REST on `http://localhost:8083`
-- MySQL driver in Connect `plugin.path` (see [Lab 02 README](../lab-02-postgresql-jdbc-source/README.md))
+- Connect REST running ([Lab 02](../lab-02-postgresql-jdbc-source/README.md))
+- Kafka broker on `localhost:9092` (or pass bootstrap as arg)
+- For JDBC labs: MySQL + plugins configured

@@ -87,6 +87,8 @@ mkdir C:\kafka-data\connect-offsets
 
 Connect discovers plugins under `plugins\confluent-jdbc\` automatically (`manifest.json` + `lib\*.jar`).
 
+> **Lab 04:** You also need `plugins\confluent-elasticsearch\` from a separate [Confluent Hub](https://www.confluent.io/hub/confluentinc/kafka-connect-elasticsearch) download — see [Lab 04](../lab-04-elasticsearch-sink/README.md#step-1--install-elasticsearch-connect-plugin).
+
 ---
 
 ## Step 2 — Install JDBC plugin + MySQL driver

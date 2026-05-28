@@ -1,8 +1,8 @@
 @echo off
 if "%~1"=="" (
   echo Usage: deploy-connector.bat ^<config-json-path^> [connect-url]
-  echo Example (cmd): deploy-connector.bat ..\configs\mysql-orders-source.json
-  echo Example (PowerShell from labs): .\scripts\deploy-connector.bat .\configs\mysql-orders-source.json
+  echo Example ^(cmd^): deploy-connector.bat ..\configs\mysql-orders-source.json
+  echo Example ^(PowerShell from labs^): .\scripts\deploy-connector.bat .\configs\mysql-orders-source.json
   exit /b 1
 )
 

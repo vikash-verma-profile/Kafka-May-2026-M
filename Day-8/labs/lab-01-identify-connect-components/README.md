@@ -1,8 +1,10 @@
-# Lab 01-Identify Connect Components
+# Lab 01 — Identify Connect Components
 
 **Objective:** Map a connector configuration snippet to Connector, Task, Converter, SMT, and Worker.
 
-From **Kafka_Connect_API.pptx**-Slide 8.
+From **Kafka_Connect_API.pptx** — Slide 8.
+
+**Environment:** Java 17, Kafka 4.2, MySQL JDBC example (used in Labs 02+).
 
 ---
 
@@ -10,6 +12,7 @@ From **Kafka_Connect_API.pptx**-Slide 8.
 
 - Basic Kafka Connect concepts (slides 5–7)
 - No cluster required (discussion lab)
+- Optional: skim [Lab 02](../lab-02-postgresql-jdbc-source/README.md) before hands-on work
 
 ---
 
@@ -26,20 +29,20 @@ transforms.mask.type=org.apache.kafka.connect.transforms.MaskField$Value
 
 ---
 
-## Step 1-Match each line
+## Step 1 — Match each line
 
 | Config key | Component | Your answer |
-|------------|-----------|-------------|
-| `connector.class=...JdbcSourceConnector` | **Connector**-defines integration type | |
-| `tasks.max=3` | **Task parallelism**-up to 3 tasks | |
-| `value.converter=AvroConverter` | **Converter**-serializes record values | |
+| ---------- | --------- | ----------- |
+| `connector.class=...JdbcSourceConnector` | **Connector** — defines integration type | |
+| `tasks.max=3` | **Task parallelism** — up to 3 tasks | |
+| `value.converter=AvroConverter` | **Converter** — serializes record values | |
 | `transforms=mask` | **SMT chain** entry point | |
-| `transforms.mask.type=MaskField$Value` | **SMT**-masks a field in the value | |
+| `transforms.mask.type=MaskField$Value` | **SMT** — masks a field in the value | |
 | (implicit) JVM process running Connect | **Worker** | |
 
 ---
 
-## Step 2-Discussion questions
+## Step 2 — Discussion questions
 
 ### Where does the Converter sit?
 
@@ -50,7 +53,7 @@ Converters run **on the worker**, before records hit Kafka (source) or after rea
 
 ### If `tasks.max=3` but only one table?
 
-Typically **1 task** runs-JDBC source often splits by table/partition; one non-partitioned table = one task. Extra task slots stay unused unless the connector can split work (e.g. multiple tables in whitelist).
+Typically **1 task** runs — JDBC source often splits by table/partition; one non-partitioned table = one task. Extra task slots stay unused unless the connector can split work (e.g. multiple tables in whitelist).
 
 ### Where to add a second SMT to drop a column?
 
@@ -64,7 +67,7 @@ Order matters: transforms run left-to-right.
 
 ---
 
-## Step 3-Draw the data path
+## Step 3 — Draw the data path
 
 Sketch (paper or mermaid):
 
@@ -90,3 +93,18 @@ flowchart LR
 ## Deliverable
 
 One paragraph: what happens when the worker process dies in **distributed mode** vs **standalone mode** (slide 9).
+
+| Mode | On worker death |
+| ---- | ---------------- |
+| **Standalone** | All connectors on that JVM stop; offsets in local file (`connect.offsets`) |
+| **Distributed** | Tasks rebalance to other workers; offsets in `connect-offsets` topic |
+
+---
+
+## Related labs
+
+| Lab | Topic |
+| --- | ----- |
+| [02](../lab-02-postgresql-jdbc-source/README.md) | MySQL JDBC source (hands-on) |
+| [05](../lab-05-smt-chain/README.md) | SMT chain |
+| [07](../lab-07-connect-rest-api-curl/README.md) | Connect REST API |
