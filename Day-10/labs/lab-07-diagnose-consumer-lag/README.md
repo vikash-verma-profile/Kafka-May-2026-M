@@ -18,6 +18,7 @@ From **Kafka_cap.pptx** — Slide 29.
 ## Prerequisites
 
 - Consumer group `order-processor` consuming topic `orders`
+- **Using Strimzi (Lab 02)?** Use `localhost:19092` instead of `localhost:9092`. See [Lab 02](../lab-02-kubernetes-strimzi/README.md).
 - Producer load generator running (perf test or script)
 
 ---

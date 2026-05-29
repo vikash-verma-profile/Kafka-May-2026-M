@@ -30,6 +30,7 @@ Producer App  →  Kafka Cluster  →  Kafka Streams  →  Sink (DB/ES)
 - Multi-broker (RF=3, `min.insync.replicas=2`)
 - ACLs + TLS (Day 9) if demonstrating security
 - Topics with appropriate partition counts (Lab 10 sizing)
+- **Kubernetes option:** deploy with Strimzi ([Lab 02](../lab-02-kubernetes-strimzi/README.md)); connect via `kubectl port-forward svc/my-cluster-kafka-bootstrap 19092:9092 -n kafka`
 
 ### 3. Kafka Streams processing (slide 42)
 

@@ -8,6 +8,19 @@ Python equivalent of production/capstone scripts.
 pip install -r requirements.txt
 ```
 
+## Bootstrap server
+
+| Cluster | `--bootstrap-server` |
+|---------|----------------------|
+| Local Kafka | `localhost:9092` |
+| Strimzi on K8s (Lab 02) | `localhost:19092` *(with port-forward running)* |
+
+Port-forward for K8s cluster:
+
+```bash
+kubectl port-forward svc/my-cluster-kafka-bootstrap 19092:9092 -n kafka
+```
+
 ## Scripts
 
 | Script | Lab |
@@ -21,3 +34,10 @@ pip install -r requirements.txt
 | `capstone_stream.py` | capstone |
 
 For JVM perf tests use [../scripts](../scripts/) (`kafka-producer-perf-test.bat`).
+
+Example with Strimzi cluster:
+
+```powershell
+python lab01_inspect_cluster.py --bootstrap-server localhost:19092
+python lab07_consumer_lag.py localhost:19092 order-processor
+```
