@@ -1,10 +1,24 @@
 # Lab 02 — Deploy Kafka on Kubernetes with Strimzi
 
-**Objective:** Install the Strimzi operator and deploy a 3-node Kafka cluster (KRaft) on Kubernetes.
+**Objective:** Install the Strimzi operator and deploy a 3-node Kafka cluster (KRaft) on Kubernetes, then connect from your Windows host.
 
 From **Kafka_cap.pptx** — Slide 12.
 
 **Estimated time:** **45–90 minutes** on first run (mostly image downloads). Repeat runs: **~15–20 minutes**.
+
+---
+
+## Lab layout
+
+```text
+lab-02-kubernetes-strimzi/
+├── README.md                          ← this file
+└── create-kafka/
+    ├── README.md                      ← manifest reference
+    └── kafka-persistent.yaml          ← apply this to create the cluster
+```
+
+Helper script (repo root): [scripts/start-strimzi-port-forwards.bat](../scripts/start-strimzi-port-forwards.bat)
 
 ---
 
@@ -21,42 +35,80 @@ From **Kafka_cap.pptx** — Slide 12.
 | 4 | Pull Kafka image × 3 (`quay.io/strimzi/kafka:1.0.0-kafka-4.1.0`) | **6–15 min** |
 | 4 | Kafka pods start + KRaft quorum forms | **2–5 min** |
 | 4 | Entity operator starts | **2–5 min** |
-| 5 | Port-forward + topic list test | **~2 min** |
+| 5 | Port-forwards + topic list test | **~2 min** |
 
-**Total:** ~20–35 min if images are cached; **45–90 min** on a fresh Docker Desktop / kind cluster with no cached Strimzi images.
+**Total:** ~20–35 min if images are cached; **45–90 min** on a fresh Docker Desktop / kind cluster.
 
-> **Tip:** Steps 2 and 4 look “stuck” in `ContainerCreating` while images download. That is normal — wait for the pull to finish before assuming something is wrong.
+> **Tip:** `ContainerCreating` for several minutes while images download is normal. Do not apply the Kafka CR until the operator pod is `1/1 Running`.
 
 ---
 
 ## Prerequisites
 
-- `kubectl` with cluster-admin (Docker Desktop Kubernetes, minikube, kind, or cloud cluster)
-- **≥ 6 GB RAM** allocated to Docker / your cluster (3 Kafka nodes + operator + entity operator)
-- Stable internet for pulling images from `quay.io`
-- [Strimzi 1.0 docs](https://strimzi.io/docs/operators/1.0.0/deploying.html)
+| Requirement | Details |
+|-------------|---------|
+| Kubernetes | Docker Desktop Kubernetes, minikube, or kind |
+| `kubectl` | Cluster-admin access |
+| RAM | **≥ 6 GB** for Docker / cluster (3 brokers + operators) |
+| Network | Pull images from `quay.io` |
+| Kafka CLI (optional) | e.g. `C:\kafka-bin\kafka_2.13-4.2.0` — **not** in this lab folder |
+| Docs | [Strimzi 1.0 deploying guide](https://strimzi.io/docs/operators/1.0.0/deploying.html) |
 
-### Strimzi 1.0 changes (important)
+### Strimzi 1.0 (important)
 
-The install URL `https://strimzi.io/install/latest` currently deploys **Strimzi 1.0**, which:
+`https://strimzi.io/install/latest` installs **Strimzi 1.0**, which:
 
-- Uses API **`kafka.strimzi.io/v1`** — older lab YAML using `v1beta2` will fail with *“no matches for kind Kafka”*
-- Runs Kafka in **KRaft mode only** (no ZooKeeper)
-- Requires a **`KafkaNodePool`** resource in addition to the **`Kafka`** resource
+| Old (slides / older labs) | Current (this lab) |
+|---------------------------|-------------------|
+| `kafka.strimzi.io/v1beta2` | `kafka.strimzi.io/v1` |
+| ZooKeeper + `Kafka` only | KRaft + `KafkaNodePool` + `Kafka` |
+| `replicas` + `storage` on `Kafka` | Storage on `KafkaNodePool` |
 
-This lab’s manifest uses one combined node pool (3 nodes, each acting as controller + broker).
+Applying old YAML gives:
 
-### Windows note — port 9092 conflict
+```text
+no matches for kind "Kafka" in version "kafka.strimzi.io/v1beta2"
+ensure CRDs are installed first
+```
 
-If you also run a **local Kafka broker** (Labs 01, 03–07), it already listens on `localhost:9092`. You cannot port-forward the K8s cluster to the same port.
+**Fix:** Wait for the operator, then use `create-kafka/kafka-persistent.yaml`.
 
-**Use `19092` as the local port** when connecting to the Strimzi cluster (see Step 5). Later labs that say `localhost:9092` should use `localhost:19092` while the K8s port-forward is active.
+### Windows / Docker Desktop
 
-Check what is using port 9092:
+| Port | Used by |
+|------|---------|
+| `9092` | Your **local** Kafka broker (Labs 01, 03–07) — do not use for Strimzi port-forward |
+| `30094` | Strimzi **bootstrap** (after port-forwards) |
+| `30095`–`30097` | Strimzi **brokers** 0–2 (after port-forwards) |
 
-```powershell
-netstat -ano | findstr ":9092"
-Get-Process -Id <PID>
+NodePorts are **not** reachable on `localhost` from Docker Desktop on Windows. Use [start-strimzi-port-forwards.bat](../scripts/start-strimzi-port-forwards.bat) (four `kubectl port-forward` sessions).
+
+---
+
+## Architecture
+
+```text
+  Your PC (Windows)
+       │
+       │  localhost:30094  (bootstrap)
+       │  localhost:30095–30097  (brokers 0–2)
+       │  via kubectl port-forward × 4
+       ▼
+  ┌─────────────────────────────────────────────┐
+  │  namespace: kafka                           │
+  │  ┌─────────────────────────────────────┐  │
+  │  │ Strimzi Cluster Operator            │  │
+  │  └─────────────────────────────────────┘  │
+  │  ┌──────────┐ ┌──────────┐ ┌──────────┐   │
+  │  │ dual-    │ │ dual-    │ │ dual-    │   │
+  │  │ role-0   │ │ role-1   │ │ role-2   │   │
+  │  │ KRaft    │ │ KRaft    │ │ KRaft    │   │
+  │  │ ctrl+brk │ │ ctrl+brk │ │ ctrl+brk │   │
+  │  └──────────┘ └──────────┘ └──────────┘   │
+  │  ┌─────────────────────────────────────┐  │
+  │  │ Entity Operator (topic + user)      │  │
+  │  └─────────────────────────────────────┘  │
+  └─────────────────────────────────────────────┘
 ```
 
 ---
@@ -75,7 +127,7 @@ kubectl create namespace kafka
 kubectl apply -f https://strimzi.io/install/latest?namespace=kafka -n kafka
 ```
 
-Wait until **both** checks pass before continuing:
+Wait until **both** pass:
 
 ```bash
 kubectl get pods -n kafka
@@ -85,197 +137,152 @@ kubectl api-resources --api-group=kafka.strimzi.io
 **Expected:**
 
 ```text
-NAME                                       READY   STATUS    RESTARTS   AGE
-strimzi-cluster-operator-xxxxxxxxxx-xxxxx  1/1     Running   0          Xm
+strimzi-cluster-operator-xxxxxxxxxx-xxxxx   1/1   Running
 
-NAME                 SHORTNAMES   APIVERSION            NAMESPACED   KIND
-kafkas               k            kafka.strimzi.io/v1   true         Kafka
-kafkanodepools       knp          kafka.strimzi.io/v1   true         KafkaNodePool
-...
+kafkas               k   kafka.strimzi.io/v1   true   Kafka
+kafkanodepools       knp kafka.strimzi.io/v1   true   KafkaNodePool
 ```
 
-**Do not proceed to Step 3 until the operator is `1/1 Running`.** If you apply the Kafka cluster too early, you will see:
-
-```text
-no matches for kind "Kafka" in version "kafka.strimzi.io/v1beta2"
-ensure CRDs are installed first
-```
-
-Fix: wait for Step 2 to complete, then use `create-kafka/kafka-persistent.yaml` (uses `v1` API).
-
-Brief `Unhealthy` liveness/readiness warnings right after the operator starts are normal while it initializes.
+Brief `Unhealthy` probe warnings right after start are normal (~1 min).
 
 ---
 
 ## Step 3 — Apply Kafka cluster
 
 ```bash
-cd lab-02-kubernetes-strimzi/create-kafka
+cd C:\Users\om\Desktop\KafKa\Day-10\labs\lab-02-kubernetes-strimzi\create-kafka
 kubectl apply -f kafka-persistent.yaml -n kafka
 ```
 
-The manifest (`create-kafka/kafka-persistent.yaml`) defines:
+### What the manifest creates
 
-- **`KafkaNodePool` `dual-role`** — 3 replicas, combined controller + broker roles, 10 Gi persistent storage each
-- **`Kafka` `my-cluster`** — Kafka 4.1.0 (KRaft), plain listener on port 9092, topic/user operators enabled
+| Resource | Name | Purpose |
+|----------|------|---------|
+| `KafkaNodePool` | `dual-role` | 3 nodes: controller + broker, 10 Gi PVC each |
+| `Kafka` | `my-cluster` | Kafka 4.1.0 (KRaft), listeners, entity operator |
 
-Full manifest:
+### Listeners
 
-```yaml
-apiVersion: kafka.strimzi.io/v1
-kind: KafkaNodePool
-metadata:
-  name: dual-role
-  labels:
-    strimzi.io/cluster: my-cluster
-spec:
-  replicas: 3
-  roles:
-    - controller
-    - broker
-  storage:
-    type: jbod
-    volumes:
-      - id: 0
-        type: persistent-claim
-        size: 10Gi
-        deleteClaim: false
-        kraftMetadata: shared
----
-apiVersion: kafka.strimzi.io/v1
-kind: Kafka
-metadata:
-  name: my-cluster
-  namespace: kafka
-spec:
-  kafka:
-    version: 4.1.0
-    metadataVersion: 4.1-IV0
-    listeners:
-      - name: plain
-        port: 9092
-        type: internal
-        tls: false
-    config:
-      offsets.topic.replication.factor: 3
-      transaction.state.log.replication.factor: 3
-      transaction.state.log.min.isr: 2
-      default.replication.factor: 3
-      min.insync.replicas: 2
-  entityOperator:
-    topicOperator: {}
-    userOperator: {}
-```
+| Listener | Type | Port | Access from PC |
+|----------|------|------|----------------|
+| `plain` | internal | 9092 | In-cluster only (`kubectl exec`) |
+| `external` | nodeport | 9094 | `localhost:30094` (bootstrap) via port-forward |
 
-A copy also lives at [configs/kafka-persistent.yaml](../configs/kafka-persistent.yaml).
+Broker advertised addresses (for clients): `localhost:30095`, `30096`, `30097`.
+
+Full YAML: [create-kafka/kafka-persistent.yaml](create-kafka/kafka-persistent.yaml) and [create-kafka/README.md](create-kafka/README.md).
 
 ---
 
 ## Step 4 — Wait for readiness
 
-Watch pod progress:
-
 ```bash
 kubectl get pods -n kafka -w
 ```
 
-**Normal startup sequence:**
-
-| Phase | Pod status | Meaning |
-|-------|------------|---------|
-| Image pull | `ContainerCreating` | Downloading ~400 MB Kafka image per node |
-| KRaft forming | `Running` but `0/1 Ready` | Broker started, readiness probe not passing yet |
-| Brokers up | `Running` `1/1 Ready` | All 3 `my-cluster-dual-role-*` pods healthy |
-| Entity operator | `Running` `0/2` → `2/2` | Topic/user operators starting (may restart once) |
-| Cluster Ready | `kubectl get kafka` shows `READY: True` | Full stack healthy |
-
-Wait for the cluster Ready condition (allow up to **15 minutes** on first run):
+| Phase | What you see |
+|-------|----------------|
+| Image pull | `ContainerCreating` (~6–15 min first run) |
+| KRaft | `Running` but `0/1 Ready` |
+| Brokers | 3× `my-cluster-dual-role-*` at `1/1 Running` |
+| Entity operator | `my-cluster-entity-operator-*` → `2/2 Running` |
+| Cluster | `kubectl get kafka` → `READY: True` |
 
 ```bash
 kubectl wait kafka/my-cluster --for=condition=Ready --timeout=900s -n kafka
+kubectl get kafka,kafkanodepool -n kafka
 ```
 
-**Expected:**
+**Expected pods:**
 
 ```text
-kafka.kafka.strimzi.io/my-cluster condition met
+my-cluster-dual-role-0                        1/1   Running
+my-cluster-dual-role-1                        1/1   Running
+my-cluster-dual-role-2                        1/1   Running
+my-cluster-entity-operator-xxxxxxxxxx-xxxxx   2/2   Running
+strimzi-cluster-operator-xxxxxxxxxx-xxxxx     1/1   Running
 ```
 
-**Expected pods when healthy:**
+**Services (after external listener is applied):**
 
 ```text
-NAME                                          READY   STATUS    RESTARTS   AGE
-my-cluster-dual-role-0                        1/1     Running   0          Xm
-my-cluster-dual-role-1                        1/1     Running   0          Xm
-my-cluster-dual-role-2                        1/1     Running   0          Xm
-my-cluster-entity-operator-xxxxxxxxxx-xxxxx   2/2     Running   0          Xm
-strimzi-cluster-operator-xxxxxxxxxx-xxxxx     1/1     Running   0          Xm
+my-cluster-kafka-external-bootstrap   NodePort   ...:30094
+my-cluster-dual-role-0                NodePort   ...:30095
+my-cluster-dual-role-1                NodePort   ...:30096
+my-cluster-dual-role-2                NodePort   ...:30097
 ```
-
-Check cluster status:
-
-```bash
-kubectl get kafka -n kafka
-kubectl get kafkanodepool -n kafka
-```
-
-You can test connectivity once all three broker pods are `1/1 Ready`, even if the entity operator is still catching up.
 
 ---
 
 ## Step 5 — Verify and connect
 
-### Port-forward (leave this terminal open)
-
-**Recommended on Windows** (avoids conflict with local Kafka on 9092):
+### Option A — Quick verify (no `KAFKA_HOME` needed)
 
 ```bash
-kubectl port-forward svc/my-cluster-kafka-bootstrap 19092:9092 -n kafka
+kubectl exec my-cluster-dual-role-0 -n kafka -c kafka -- bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
 ```
 
-If port 9092 is free on your machine:
+Empty output = success (no topics yet).
 
-```bash
-kubectl port-forward svc/my-cluster-kafka-bootstrap 9092:9092 -n kafka
-```
+### Option B — Kafka CLI from Windows
 
-If port-forward fails with *“bind: access permissions”* or *“unable to listen”*, another process owns that port — use `19092` instead.
+**Do not** run `bin\windows\kafka-topics.bat` from `create-kafka\` — that folder has **only YAML**, no Kafka binaries.
 
-### Test connectivity
-
-In another terminal, list topics (requires `KAFKA_HOME`):
+**Terminal 1** — start port-forwards (four windows stay open):
 
 ```bat
-bin\windows\kafka-topics.bat --bootstrap-server localhost:19092 --list
+cd C:\Users\om\Desktop\KafKa\Day-10\labs\scripts
+start-strimzi-port-forwards.bat
 ```
 
-Or with Python from this repo:
+Manual equivalent:
 
 ```bash
-cd python-production-lab
-python lab01_inspect_cluster.py --bootstrap-server localhost:19092
+kubectl port-forward svc/my-cluster-kafka-external-bootstrap 30094:9094 -n kafka
+kubectl port-forward svc/my-cluster-dual-role-0 30095:9094 -n kafka
+kubectl port-forward svc/my-cluster-dual-role-1 30096:9094 -n kafka
+kubectl port-forward svc/my-cluster-dual-role-2 30097:9094 -n kafka
+```
+
+**Terminal 2** — list topics:
+
+```bat
+cd C:\kafka-bin\kafka_2.13-4.2.0
+bin\windows\kafka-topics.bat --bootstrap-server localhost:30094 --list
+```
+
+Or:
+
+```bat
+cd %KAFKA_HOME%
+bin\windows\kafka-topics.bat --bootstrap-server localhost:30094 --list
+```
+
+**Python:**
+
+```bash
+cd C:\Users\om\Desktop\KafKa\Day-10\labs\python-production-lab
+python lab01_inspect_cluster.py --bootstrap-server localhost:30094
 ```
 
 ### Bootstrap server for later labs
 
-| Cluster | Bootstrap server |
-|---------|------------------|
-| Local Kafka (default labs) | `localhost:9092` |
-| Strimzi on K8s (this lab) | `localhost:19092` *(with port-forward running)* |
-
-Keep the port-forward terminal open while running Labs 01, 03–07 against the K8s cluster.
+| Cluster | `--bootstrap-server` | Before running commands |
+|---------|----------------------|-------------------------|
+| Local Kafka | `localhost:9092` | Start local broker |
+| Strimzi (this lab) | `localhost:30094` | Run `start-strimzi-port-forwards.bat` |
 
 ---
 
 ## Checkpoint
 
-- [ ] Strimzi operator pod `1/1 Running`
-- [ ] `kubectl api-resources --api-group=kafka.strimzi.io` shows `Kafka` at `kafka.strimzi.io/v1`
-- [ ] 3 `my-cluster-dual-role-*` pods `1/1 Running`
-- [ ] Entity operator pod `2/2 Running`
-- [ ] `kubectl get kafka my-cluster -n kafka` shows `READY: True`
-- [ ] Port-forward active on `19092` (or `9092`)
-- [ ] Can list topics via `--bootstrap-server localhost:19092`
+- [ ] Operator `1/1 Running`; API shows `kafka.strimzi.io/v1`
+- [ ] `kubectl apply -f kafka-persistent.yaml` succeeded
+- [ ] 3× `my-cluster-dual-role-*` pods `1/1 Running`
+- [ ] Entity operator `2/2 Running`
+- [ ] `kubectl get kafka my-cluster -n kafka` → `READY: True`
+- [ ] Option A or B: topic list works (empty list is OK)
+- [ ] Know bootstrap for later labs: `localhost:30094` + port-forwards
 
 ---
 
@@ -283,22 +290,26 @@ Keep the port-forward terminal open while running Labs 01, 03–07 against the K
 
 | Symptom | Cause | Fix |
 |---------|--------|-----|
-| `no matches for kind "Kafka" in version "kafka.strimzi.io/v1beta2"` | Old YAML or operator/CRDs not ready | Wait for operator Running; use `create-kafka/kafka-persistent.yaml` (`v1` API) |
-| Operator stuck in `ContainerCreating` | Pulling ~230 MB operator image | Wait 3–6 min; check `kubectl describe pod -n kafka -l name=strimzi-cluster-operator` |
-| Kafka pods stuck in `ContainerCreating` | Pulling Kafka image (~400 MB per node) | Wait 6–15 min; events show `Pulling image "quay.io/strimzi/kafka:..."` |
-| Pods `Running` but `0/1 Ready` for several minutes | KRaft quorum still forming | Wait 2–5 min; check `kubectl logs my-cluster-dual-role-0 -n kafka` |
-| Entity operator `0/2` with probe restarts | Operators still starting | Wait 2–5 min; should reach `2/2 Running` |
-| `kubectl wait` times out | Image pulls or entity operator slow | Re-run with `--timeout=900s`; confirm all broker pods are `1/1 Ready` |
-| Port-forward: `unable to listen on port 9092` | Local Kafka already on 9092 | Use `19092:9092` mapping; see Windows note above |
-| PVC `Pending` | Storage class / provisioner missing | Ensure default StorageClass exists: `kubectl get sc` |
+| `no matches for kind "Kafka" in version "kafka.strimzi.io/v1beta2"` | Old YAML or CRDs not ready | Wait for operator; use `create-kafka/kafka-persistent.yaml` |
+| Operator `ContainerCreating` long time | Pulling ~230 MB image | Wait 3–6 min |
+| Kafka pods `ContainerCreating` | Pulling ~400 MB image × 3 | Wait 6–15 min |
+| `Running` but `0/1 Ready` | KRaft still forming | Wait 2–5 min |
+| Entity operator `0/2`, restarts | Still starting | Wait; target `2/2 Running` |
+| `kubectl wait` timeout | Slow first pull | `--timeout=900s`; check brokers `1/1` |
+| `unable to listen on port 9092` | Local Kafka on 9092 | Use `30094` + port-forward script |
+| `The system cannot find the path specified` | Ran CLI from `create-kafka\` | `cd` to `KAFKA_HOME` or `C:\kafka-bin\kafka_2.13-4.2.0` |
+| `Timed out waiting for a node assignment` | Single forward to internal bootstrap (`19092:9092`) | Use Option B (4 forwards) or Option A (`kubectl exec`) |
+| Port-forward `lost connection to pod` | Rolling update replaced broker | Restart `start-strimzi-port-forwards.bat` |
+| NodePort test fails on `localhost:30094` | Docker Desktop limitation | Use port-forwards, not raw NodePort |
 
-Useful debug commands:
+**Debug commands:**
 
 ```bash
 kubectl get events -n kafka --sort-by='.lastTimestamp'
 kubectl describe kafka my-cluster -n kafka
+kubectl get svc -n kafka
 kubectl logs -n kafka deployment/strimzi-cluster-operator --tail=50
-kubectl describe pod my-cluster-dual-role-0 -n kafka
+kubectl exec my-cluster-dual-role-0 -n kafka -c kafka -- grep advertised.listeners /tmp/strimzi.properties
 ```
 
 ---
@@ -311,7 +322,9 @@ kubectl delete kafkanodepool dual-role -n kafka
 kubectl delete namespace kafka
 ```
 
-Deleting the namespace alone also removes all resources inside it.
+Or delete the namespace only (removes everything in `kafka`).
+
+Close the four port-forward windows if still open.
 
 ---
 

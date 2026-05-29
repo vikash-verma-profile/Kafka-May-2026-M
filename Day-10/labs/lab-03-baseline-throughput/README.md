@@ -19,7 +19,7 @@ From **Kafka_cap.pptx** — Slide 16.
 
 - 3-broker cluster (Lab 01 or 02)
 - Client host with low latency to brokers
-- **Using Strimzi (Lab 02)?** Port-forward with `kubectl port-forward svc/my-cluster-kafka-bootstrap 19092:9092 -n kafka`, then replace `localhost:9092` with `localhost:19092` below.
+- **Using Strimzi (Lab 02)?** Run `scripts/start-strimzi-port-forwards.bat`, then use `localhost:30094` instead of `localhost:9092` below.
 
 ---
 

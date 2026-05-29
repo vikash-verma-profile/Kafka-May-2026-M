@@ -31,19 +31,26 @@ Most labs assume a **local Kafka broker** on `localhost:9092`. Lab 02 deploys Ka
 | Setup | Bootstrap server | When to use |
 |-------|------------------|-------------|
 | Local broker | `localhost:9092` | Labs 01, 03–10 (default) |
-| Strimzi on K8s (Lab 02) | `localhost:19092` | After port-forward (see below) |
+| Strimzi on K8s (Lab 02) | `localhost:30094` | After `scripts/start-strimzi-port-forwards.bat` |
 
 ### Connecting to the Strimzi cluster (Lab 02)
 
-After Lab 02 completes, keep this running in a terminal:
+After Lab 02 completes, start port-forwards (keep windows open):
 
-```bash
-kubectl port-forward svc/my-cluster-kafka-bootstrap 19092:9092 -n kafka
+```bat
+cd scripts
+start-strimzi-port-forwards.bat
 ```
 
-Use `localhost:19092` instead of `localhost:9092` in all later lab commands while the port-forward is active.
+Use **`localhost:30094`** instead of `localhost:9092` in all later lab commands while connected to K8s Kafka.
 
-> **Why 19092?** On Windows, a local Kafka broker often already occupies port 9092. Port `19092` avoids the conflict. See [lab-02 README](lab-02-kubernetes-strimzi/README.md) for details.
+Quick verify without local Kafka install:
+
+```bash
+kubectl exec my-cluster-dual-role-0 -n kafka -c kafka -- bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+```
+
+See [lab-02 README](lab-02-kubernetes-strimzi/README.md) for details.
 
 ### Strimzi manifest (Lab 02)
 

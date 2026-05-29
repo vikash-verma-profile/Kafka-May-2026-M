@@ -13,12 +13,13 @@ pip install -r requirements.txt
 | Cluster | `--bootstrap-server` |
 |---------|----------------------|
 | Local Kafka | `localhost:9092` |
-| Strimzi on K8s (Lab 02) | `localhost:19092` *(with port-forward running)* |
+| Strimzi on K8s (Lab 02) | `localhost:30094` *(with port-forward running)* |
 
-Port-forward for K8s cluster:
+Port-forward for K8s cluster (run `scripts/start-strimzi-port-forwards.bat` from repo root):
 
-```bash
-kubectl port-forward svc/my-cluster-kafka-bootstrap 19092:9092 -n kafka
+```bat
+cd scripts
+start-strimzi-port-forwards.bat
 ```
 
 ## Scripts
@@ -38,6 +39,6 @@ For JVM perf tests use [../scripts](../scripts/) (`kafka-producer-perf-test.bat`
 Example with Strimzi cluster:
 
 ```powershell
-python lab01_inspect_cluster.py --bootstrap-server localhost:19092
-python lab07_consumer_lag.py localhost:19092 order-processor
+python lab01_inspect_cluster.py --bootstrap-server localhost:30094
+python lab07_consumer_lag.py localhost:30094 order-processor
 ```

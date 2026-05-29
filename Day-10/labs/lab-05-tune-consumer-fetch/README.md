@@ -10,7 +10,7 @@ From **Kafka_cap.pptx** — Slide 22.
 
 - Topic `bench` with **6+ partitions**
 - Continuous load (run producer perf test in background)
-- **Using Strimzi (Lab 02)?** Use `localhost:19092` instead of `localhost:9092`. See [Lab 02](../lab-02-kubernetes-strimzi/README.md).
+- **Using Strimzi (Lab 02)?** Use `localhost:30094` instead of `localhost:9092`. See [Lab 02](../lab-02-kubernetes-strimzi/README.md).
 
 ---
 

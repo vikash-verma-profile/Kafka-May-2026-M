@@ -1,3 +1,16 @@
+# Lab 02 — Strimzi 1.0 KRaft cluster (3 combined controller+broker nodes)
+#
+# Prerequisites:
+#   kubectl apply -f https://strimzi.io/install/latest?namespace=kafka -n kafka
+#   Wait until strimzi-cluster-operator pod is 1/1 Running
+#
+# Apply:
+#   kubectl apply -f kafka-persistent.yaml -n kafka
+#
+# Connect from Windows (Docker Desktop):
+#   scripts/start-strimzi-port-forwards.bat
+#   kafka-topics.bat --bootstrap-server localhost:30094 --list
+#
 apiVersion: kafka.strimzi.io/v1
 kind: KafkaNodePool
 metadata:
@@ -28,10 +41,29 @@ spec:
     version: 4.1.0
     metadataVersion: 4.1-IV0
     listeners:
+      # In-cluster (kubectl exec, other pods)
       - name: plain
         port: 9092
         type: internal
         tls: false
+      # Host access: NodePort + advertisedHost localhost (use port-forwards on Docker Desktop Windows)
+      - name: external
+        port: 9094
+        type: nodeport
+        tls: false
+        configuration:
+          bootstrap:
+            nodePort: 30094
+          brokers:
+            - broker: 0
+              nodePort: 30095
+              advertisedHost: localhost
+            - broker: 1
+              nodePort: 30096
+              advertisedHost: localhost
+            - broker: 2
+              nodePort: 30097
+              advertisedHost: localhost
     config:
       offsets.topic.replication.factor: 3
       transaction.state.log.replication.factor: 3

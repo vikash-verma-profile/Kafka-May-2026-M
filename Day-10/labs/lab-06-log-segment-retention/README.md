@@ -10,7 +10,7 @@ From **Kafka_cap.pptx** — Slide 25.
 
 - Running cluster from Lab 01
 - Know `log.dirs` path (e.g. `C:\kafka-data\kraft-combined-logs`)
-- **Using Strimzi (Lab 02)?** Use `localhost:19092` instead of `localhost:9092`. Disk inspection steps apply to local brokers only.
+- **Using Strimzi (Lab 02)?** Use `localhost:30094` instead of `localhost:9092`. Disk inspection steps apply to local brokers only.
 
 ---
 

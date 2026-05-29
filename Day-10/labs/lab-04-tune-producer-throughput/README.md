@@ -18,7 +18,7 @@ From **Kafka_cap.pptx** — Slide 19.
 ## Prerequisites
 
 - [Lab 03](../lab-03-baseline-throughput/README.md) baseline recorded
-- **Using Strimzi (Lab 02)?** Use `localhost:19092` instead of `localhost:9092` (port-forward required). See [Lab 02](../lab-02-kubernetes-strimzi/README.md).
+- **Using Strimzi (Lab 02)?** Use `localhost:30094` instead of `localhost:9092` (port-forward required). See [Lab 02](../lab-02-kubernetes-strimzi/README.md).
 - Topic `bench` with data (or recreate)
 
 ---

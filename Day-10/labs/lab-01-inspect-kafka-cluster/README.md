@@ -19,7 +19,7 @@ From **Kafka_cap.pptx** — Slide 8.
 
 - Kafka 3.x/4.x on PATH (`KAFKA_HOME`)
 - Cluster reachable on `localhost:9092` (or multi-broker from `start-kafka-cluster.bat`)
-- **Using Strimzi (Lab 02)?** Port-forward first, then use `localhost:19092` instead of `9092` in all commands below. See [Lab 02](../lab-02-kubernetes-strimzi/README.md).
+- **Using Strimzi (Lab 02)?** Port-forward first, then use `localhost:30094` instead of `9092` in all commands below. See [Lab 02](../lab-02-kubernetes-strimzi/README.md).
 
 ---
 
