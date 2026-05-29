@@ -5,8 +5,8 @@ if "%KAFKA_HOME%"=="" (
 )
 
 set BS=%~1
-if "%BS%"=="" set BS=localhost:9093
-set CFG=%~dp0..\configs\client-scram.properties
+if "%BS%"=="" set BS=localhost:9096
+set CFG=%~dp0..\my-config\client-scram-oneshot.properties
 
 echo Grant alice Write on orders...
 "%KAFKA_HOME%\bin\windows\kafka-acls.bat" --bootstrap-server %BS% ^

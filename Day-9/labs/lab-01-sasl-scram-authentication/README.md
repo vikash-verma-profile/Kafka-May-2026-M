@@ -18,10 +18,10 @@
 
 ## Before you start — checklist
 
-- [ ] `KAFKA_HOME` is set and Kafka CLI works (see [main README](../README.md#first-time-setup-do-this-once-before-lab-01))
-- [ ] One broker is running (default PLAINTEXT port **9092**)
+- [ ] Kafka **4.2.0** (or 3.x+) installed — example path `C:\kafka-bin\kafka_2.13-4.2.0`
+- [ ] Cluster running from [my-config/README.md](../my-config/README.md) (controller + 3 brokers)
 - [ ] You are **not** using a production cluster
-- [ ] You have a text editor to edit `server.properties`
+- [ ] Client config ready: [configs/client-scram.properties](../configs/client-scram.properties) or [my-config/client-scram-oneshot.properties](../my-config/client-scram-oneshot.properties)
 
 ---
 
@@ -59,6 +59,8 @@
    ```
 
 **Expected:** `cd` succeeds; no “path not found” error.
+
+> **Windows tip:** If you see `More?` while pasting commands, you are in CMD line-continuation mode. Easiest fix: paste the command as a **single line**.
 
 ---
 
@@ -100,54 +102,72 @@ bin\windows\kafka-configs.bat --bootstrap-server localhost:9092 ^
 
 ## Step 2 — Enable SASL on the broker
 
-You will add a **second listener** on port **9093** that requires SCRAM, while keeping **9092** as PLAINTEXT for now (easier for learning).
+You will add a **SASL listener** that requires SCRAM, while keeping PLAINTEXT for learning/troubleshooting.
+
+### Already done in this repo?
+
+If you use [my-config/](../my-config/) configs, **SASL is already enabled on all three brokers**. Skip to **Step 1** (create user) if the cluster is running, then **Step 4** (produce/consume).
+
+Otherwise, configure manually:
+
+This repo’s working 3-broker setup uses:
+
+| Role | PLAINTEXT | SASL (SCRAM) |
+|------|-----------|--------------|
+| Broker-1 (node.id=2) | 9092 | **9096** |
+| Broker-2 (node.id=3) | 9094 | **9097** |
+| Broker-3 (node.id=4) | 9095 | **9098** |
+| Controller | — | **9093** (not for clients) |
 
 ### 2.1 Edit broker configuration
 
-1. Find your broker config file — usually `%KAFKA_HOME%\config\server.properties` or `broker-1.properties`.
+1. Find your broker config file — usually `%KAFKA_HOME%\config\server.properties` or a per-broker file like `broker-1.properties`.
 2. **Stop the broker** (Ctrl+C in the broker terminal).
 3. Add or update these lines:
 
    ```properties
-   listeners=SASL_PLAINTEXT://:9093,PLAINTEXT://:9092
+   listeners=SASL_PLAINTEXT://:9096,PLAINTEXT://:9092
    sasl.enabled.mechanisms=SCRAM-SHA-512
-   listener.security.protocol.map=SASL_PLAINTEXT:SASL_PLAINTEXT,PLAINTEXT:PLAINTEXT
+   listener.security.protocol.map=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT
+   ```
+
+   Also set a correct advertised hostname (important on Windows):
+
+   ```properties
+   advertised.listeners=SASL_PLAINTEXT://localhost:9096,PLAINTEXT://localhost:9092
    ```
 
 4. Save the file.
 
 ### 2.2 Create JAAS file for the broker itself
 
-The broker also needs an identity to authenticate inter-broker traffic. Create `%KAFKA_HOME%\config\kafka_server_jaas.conf`:
+The broker SASL listener needs a JAAS file. This repo provides: [my-config/kafka_server_jaas.conf](../my-config/kafka_server_jaas.conf):
 
 ```text
 KafkaServer {
   org.apache.kafka.common.security.scram.ScramLoginModule required
-  username="admin"
-  password="admin-secret";
+  username="alice"
+  password="secret";
 };
 ```
 
-### 2.3 Create SCRAM user `admin` (must match JAAS)
+> For production labs with a separate broker `admin` user, you can change this to `admin` / `admin-secret` and create that SCRAM user too.
 
-While the broker is still **stopped**, on PLAINTEXT port 9092:
+### 2.3 Set `KAFKA_OPTS` and start each broker
 
-```bat
-bin\windows\kafka-configs.bat --bootstrap-server localhost:9092 ^
-  --alter --add-config "SCRAM-SHA-512=[password=admin-secret]" ^
-  --entity-type users --entity-name admin
-```
+**Important:** `KAFKA_OPTS` must be set in the **same** terminal session **before** `kafka-server-start`.
 
-### 2.4 Set `KAFKA_OPTS` and start the broker
-
-In the **same** terminal session where you start Kafka:
+**Broker-1 example (CMD):**
 
 ```bat
-set KAFKA_OPTS=-Djava.security.auth.login.config=%KAFKA_HOME%\config\kafka_server_jaas.conf
-bin\windows\kafka-server-start.bat %KAFKA_HOME%\config\server.properties
+cd C:\kafka-bin\kafka_2.13-4.2.0
+set KAFKA_OPTS=-Djava.security.auth.login.config=c:\Users\om\Desktop\KafKa\Day-9\labs\my-config\kafka_server_jaas.conf
+bin\windows\kafka-server-start.bat c:\Users\om\Desktop\KafKa\Day-9\labs\my-config\broker-1.properties
 ```
 
-**What success looks like:** Log lines show listeners on **9092** and **9093**; no `LoginException` or JAAS file errors.
+Repeat for `broker-2.properties` and `broker-3.properties` in **separate** terminals. Full commands: [my-config/README.md](../my-config/README.md).
+
+**What success looks like:** Logs show `Awaiting socket connections on ...9096` (SASL) and `...9092` (PLAINTEXT); no `LoginException` or JAAS errors.
 
 > **Note:** `KAFKA_OPTS` only applies to that terminal window. If you close it and restart the broker, set `KAFKA_OPTS` again.
 
@@ -176,15 +196,15 @@ The lab repo includes a ready-made file: [configs/client-scram.properties](../co
 
 ## Step 4 — Create topic and produce a message
 
-All commands below must use port **9093** and `--command-config` / `--producer.config`.
+All commands below must use your **SASL port** (in this setup: **9096**) and `--command-config`.
 
 ### 4.1 Create topic `orders`
 
 ```bat
 cd /d %KAFKA_HOME%
-bin\windows\kafka-topics.bat --create --topic orders --bootstrap-server localhost:9093 ^
+bin\windows\kafka-topics.bat --create --topic orders --bootstrap-server localhost:9096 ^
   --command-config c:\Users\om\Desktop\KafKa\Day-9\labs\configs\client-scram.properties ^
-  --partitions 3 --replication-factor 1
+  --partitions 3 --replication-factor 3
 ```
 
 **Expected:** `Created topic orders.`  
@@ -193,8 +213,8 @@ bin\windows\kafka-topics.bat --create --topic orders --bootstrap-server localhos
 ### 4.2 Start console producer
 
 ```bat
-bin\windows\kafka-console-producer.bat --bootstrap-server localhost:9093 ^
-  --producer.config c:\Users\om\Desktop\KafKa\Day-9\labs\configs\client-scram.properties ^
+bin\windows\kafka-console-producer.bat --bootstrap-server localhost:9096,localhost:9097,localhost:9098 ^
+  --command-config c:\Users\om\Desktop\KafKa\Day-9\labs\configs\client-scram.properties ^
   --topic orders
 ```
 
@@ -208,14 +228,14 @@ Type a line, e.g. `hello-scram`, and press **Enter**.
 
 ```bat
 cd c:\Users\om\Desktop\KafKa\Day-9\labs\java-security-lab
-mvn -q exec:java -Dexec.mainClass=day9.labs.Lab01ScramProducer -Dexec.args="localhost:9093 orders alice secret"
+mvn -q exec:java -Dexec.mainClass=day9.labs.Lab01ScramProducer -Dexec.args="localhost:9096 orders alice secret"
 ```
 
 **Python** ([python-security-lab](../python-security-lab/README.md)):
 
 ```bat
 cd c:\Users\om\Desktop\KafKa\Day-9\labs\python-security-lab
-python lab01_scram_producer.py localhost:9093 orders alice secret
+python lab01_scram_producer.py localhost:9096 orders alice secret
 ```
 
 ### 4.4 (Optional) Read the message back
@@ -223,8 +243,8 @@ python lab01_scram_producer.py localhost:9093 orders alice secret
 Open a **new** terminal:
 
 ```bat
-bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9093 ^
-  --consumer.config c:\Users\om\Desktop\KafKa\Day-9\labs\configs\client-scram.properties ^
+bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9096,localhost:9097,localhost:9098 ^
+  --command-config c:\Users\om\Desktop\KafKa\Day-9\labs\configs\client-scram.properties ^
   --topic orders --from-beginning --group test-read-once
 ```
 
@@ -234,22 +254,26 @@ bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9093 ^
 
 ## Checkpoint — you are done when
 
-- [ ] User `alice` appears in `kafka-configs --describe`
-- [ ] Broker listens on port **9093** (SASL)
-- [ ] Producer connects on **9093** with SCRAM config
-- [ ] Message is visible to consumer with the same client config
+- [ ] User `alice` appears in `kafka-configs --describe` (via port **9092**)
+- [ ] All three brokers listen on SASL ports **9096 / 9097 / 9098**
+- [ ] Producer connects with `--command-config` and bootstrap `localhost:9096,localhost:9097,localhost:9098`
+- [ ] Consumer reads messages with the same config
 
 ---
 
 ## Troubleshooting
 
+See also: [TROUBLESHOOTING.md](../TROUBLESHOOTING.md)
+
 | Symptom | Likely cause | What to do |
 |---------|--------------|------------|
-| `Authentication failed` | Wrong password or user not created | Re-run Step 1; fix `client-scram.properties` |
-| Broker exits on start | JAAS path wrong | Check `%KAFKA_HOME%\config\kafka_server_jaas.conf` exists; `KAFKA_OPTS` path uses forward slashes or escaped backslashes |
-| `Connection refused` on 9093 | SASL listener not enabled | Re-check `listeners=` in `server.properties`; restart broker |
-| Producer still works on **9092** without config | PLAINTEXT still open | Expected for this lab — do not disable until you understand Lab 02–03 |
-| `LoginModule not found` | Typo in `sasl.jaas.config` | Copy JAAS line exactly from Step 3 |
+| `Authentication failed` | Wrong password or user not created | Re-run Step 1 on **9092**; fix client properties |
+| `enabled mechanisms are []` on **9093** | Used controller port for SCRAM | Use **9096/9097/9098**, not 9093 |
+| `Unexpected handshake` on **9092** | SCRAM config on PLAINTEXT port | Use SASL ports only with `--command-config` |
+| `0 messages` / producer timeout | SASL only on one broker | Enable SASL on **all** brokers ([my-config](../my-config/)) |
+| Broker exits: JAAS not set | `KAFKA_OPTS` missing | Set before start; see [my-config/README](../my-config/README.md) |
+| CMD shows `More?` | Broken multi-line paste | Paste command as **one line** |
+| `LoginModule not found` | Typo in `sasl.jaas.config` | Use `client-scram-oneshot.properties` for CLI |
 
 ---
 

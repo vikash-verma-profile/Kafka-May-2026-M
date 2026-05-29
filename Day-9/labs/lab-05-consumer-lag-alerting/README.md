@@ -163,7 +163,7 @@ cd /d %KAFKA_HOME%
 bin\windows\kafka-console-producer.bat --bootstrap-server localhost:9092 --topic orders
 ```
 
-Leave it open; type messages occasionally or paste many lines.
+Leave it open; type messages occasionally or paste many lines. (PLAINTEXT is fine for lag demo; cluster from [my-config](../my-config/README.md).)
 
 ### Terminal B — consumer (then stop it)
 

@@ -91,14 +91,14 @@ After broker listens on **SASL_PLAINTEXT** port **9093** (see [Lab 01 README](..
 ### Command
 
 ```powershell
-python lab01_scram_producer.py localhost:9093 orders alice secret
+python lab01_scram_producer.py localhost:9096 orders alice secret
 ```
 
 Arguments:
 
 | # | Argument | Example | Meaning |
 |---|----------|---------|---------|
-| 1 | bootstrap | `localhost:9093` | Broker SASL port |
+| 1 | bootstrap | `localhost:9096` | Broker-1 SASL port (see [my-config](../my-config/README.md)) |
 | 2 | topic | `orders` | Topic name |
 | 3 | username | `alice` | SCRAM user |
 | 4 | password | `secret` | SCRAM password |

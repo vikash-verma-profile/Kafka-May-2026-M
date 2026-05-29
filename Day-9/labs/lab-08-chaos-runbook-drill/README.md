@@ -30,6 +30,7 @@
 ## Before you start — checklist
 
 - [ ] Labs 04–07 done (metrics, alerts, Grafana, broker drill)
+- [ ] 3-broker cluster from [my-config](../my-config/README.md)
 - [ ] Stopwatch or phone timer ready
 - [ ] Blank doc for post-incident notes
 - [ ] WSL/Linux **or** Windows firewall **or** Toxiproxy — pick one isolation method below

@@ -25,7 +25,7 @@ Hands-on labs from **Kafka_Security_Monitoring.pptx**. Each lab builds on the pr
 
 | Tool | Why you need it | How to check |
 |------|-----------------|--------------|
-| **Apache Kafka** (3.x, KRaft mode) | Runs the brokers and CLI tools | `dir %KAFKA_HOME%\bin\windows` shows `.bat` files |
+| **Apache Kafka** (3.x–4.x, KRaft mode) | Runs the brokers and CLI tools | Example: `C:\kafka-bin\kafka_2.13-4.2.0` |
 | **Java JDK 11+** | Kafka runs on the JVM | `java -version` |
 | **Maven 3.8+** (optional) | Java lab track | `mvn -version` |
 | **Python 3.9+** (optional) | Python lab track | `python --version` |
@@ -37,9 +37,15 @@ Hands-on labs from **Kafka_Security_Monitoring.pptx**. Each lab builds on the pr
 
 Open **PowerShell** or **Command Prompt** and run (adjust the path to where you unpacked Kafka):
 
+```bat
+set KAFKA_HOME=C:\kafka-bin\kafka_2.13-4.2.0
+set PATH=%KAFKA_HOME%\bin\windows;%PATH%
+```
+
+PowerShell equivalent:
+
 ```powershell
-# Example — change to YOUR Kafka folder
-$env:KAFKA_HOME = "C:\kafka\kafka_2.13-3.6.0"
+$env:KAFKA_HOME = "C:\kafka-bin\kafka_2.13-4.2.0"
 $env:PATH = "$env:KAFKA_HOME\bin\windows;$env:PATH"
 ```
 
@@ -57,18 +63,36 @@ c:\Users\om\Desktop\KafKa\Day-9\labs\
 
 All lab READMEs assume commands are run from `%KAFKA_HOME%` for Kafka CLI, or from `Day-9\labs\` for scripts, Java, and Python.
 
-### 4. Start a test Kafka cluster
+### 4. Start the lab cluster (recommended: use `my-config/`)
 
-- **Labs 01–06:** A **single broker** on `localhost:9092` is enough.
-- **Labs 07–08:** You need **three brokers** (e.g. ports 9092, 9094, 9095). Use your course `start-kafka-cluster.bat` if provided.
+**Full step-by-step:** [my-config/README.md](my-config/README.md)
 
-**What success looks like:** No errors when you run:
+| Labs | Cluster needed |
+|------|----------------|
+| **01–06** (security + monitoring) | Controller + **3 brokers** (this repo’s default) |
+| **07–08** (failure + chaos drills) | Same 3-broker cluster |
+
+**Start order (4 terminals):**
+
+1. Controller → `my-config/controller.properties` (port **9093**)
+2. Broker-1 → `my-config/broker-1.properties` + `KAFKA_OPTS` + `kafka_server_jaas.conf`
+3. Broker-2 → `my-config/broker-2.properties` + `KAFKA_OPTS`
+4. Broker-3 → `my-config/broker-3.properties` + `KAFKA_OPTS`
+
+**Verify PLAINTEXT:**
 
 ```bat
-%KAFKA_HOME%\bin\windows\kafka-broker-api-versions.bat --bootstrap-server localhost:9092
+cd C:\kafka-bin\kafka_2.13-4.2.0
+bin\windows\kafka-broker-api-versions.bat --bootstrap-server localhost:9092
 ```
 
-You should see API version output, not `Connection refused`.
+**Verify SCRAM:**
+
+```bat
+bin\windows\kafka-broker-api-versions.bat --bootstrap-server localhost:9096 --command-config c:\Users\om\Desktop\KafKa\Day-9\labs\my-config\client-scram-oneshot.properties
+```
+
+**Stuck?** See [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
 
 ---
 
@@ -76,12 +100,48 @@ You should see API version output, not `Connection refused`.
 
 | Path | Purpose |
 |------|---------|
-| [configs/](configs/) | Ready-made client properties (SCRAM, TLS templates) |
+| [configs/](configs/) | Client SCRAM/TLS templates — see [configs/README.md](configs/README.md) |
 | [monitoring/](monitoring/) | Prometheus scrape config and alert rules |
 | [scripts/](scripts/) | Helper `.bat` files (create user, grant ACLs) |
+| [my-config/](my-config/) | **Your working KRaft configs** (controller + 3 brokers + JAAS) |
 | [java-security-lab/](java-security-lab/) | Java (`kafka-clients`) producer and lag checker |
 | [python-security-lab/](python-security-lab/) | Python (`kafka-python`) producer and lag checker |
 | [docker/](docker/) | **Docker map** + optional compose for Labs 04–06 |
+| [TROUBLESHOOTING.md](TROUBLESHOOTING.md) | Errors we fixed (ports, SASL, JAAS, Kafka 4.x) |
+
+---
+
+## Your exact lab cluster (the setup we fixed)
+
+This repo includes a ready-to-run **KRaft controller + 3 brokers** setup in `my-config/`.
+
+### Ports used
+
+| Component | Listener | Port | Notes |
+|----------|----------|------|------|
+| Controller | `CONTROLLER` | **9093** | **Not for producers/consumers** |
+| Broker-1 (node.id=2) | `PLAINTEXT` | **9092** | No auth |
+| Broker-1 (node.id=2) | `SASL_PLAINTEXT` | **9096** | SCRAM user/pass |
+| Broker-2 (node.id=3) | `PLAINTEXT` | **9094** | No auth |
+| Broker-2 (node.id=3) | `SASL_PLAINTEXT` | **9097** | SCRAM user/pass |
+| Broker-3 (node.id=4) | `PLAINTEXT` | **9095** | No auth |
+| Broker-3 (node.id=4) | `SASL_PLAINTEXT` | **9098** | SCRAM user/pass |
+
+### Why you must enable SASL on *all* brokers in a 3-broker topic
+
+Your topics use `replication-factor=3`. A partition leader can be on **any** broker.  
+If only one broker had SASL enabled, a SCRAM client would authenticate to the bootstrap broker but fail when it is redirected to the partition leader (timeouts / “unexpected handshake” / “0 messages”).
+
+We fixed this by enabling `SASL_PLAINTEXT` on **broker-2** and **broker-3** as well.
+
+---
+
+## Kafka 4.x note (important for commands)
+
+Kafka 4.x prints warnings if you use old flags like `--producer.config` or `--consumer.config`.
+
+- Use **`--command-config <properties-file>`** instead.
+- On Windows **CMD**, if you split a command incorrectly you will see `More?` prompts. Easiest fix: copy/paste commands as **single lines**.
 
 ---
 
@@ -122,7 +182,7 @@ You can mix tracks (e.g. shell for Lab 01 broker setup, Java for produce).
 3. **Copy paths carefully** — Windows uses backslashes; Kafka config paths must match where files actually are.
 4. **Restart the broker** after changing `server.properties` or JAAS files.
 5. **Check the Checkpoint section** at the end of each lab — tick every box before moving on.
-6. If stuck, use the **Troubleshooting** table in each lab README.
+6. If stuck, use [TROUBLESHOOTING.md](TROUBLESHOOTING.md) and each lab’s troubleshooting table.
 
 ---
 

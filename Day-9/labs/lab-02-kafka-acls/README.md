@@ -4,7 +4,7 @@
 
 **Source:** Kafka_Security_Monitoring.pptx — Slide 11  
 **Time:** ~25 minutes  
-**Requires:** [Lab 01](../lab-01-sasl-scram-authentication/README.md) completed (SCRAM users + SASL port 9093)
+**Requires:** [Lab 01](../lab-01-sasl-scram-authentication/README.md) completed (SCRAM users + SASL port **9096/9097/9098**)
 
 ---
 
@@ -19,7 +19,7 @@
 ## Before you start — checklist
 
 - [ ] Lab 01 done: SCRAM users `alice` and `bob` exist (create `bob` the same way as `alice` if needed)
-- [ ] Broker SASL on port **9093** works
+- [ ] Broker SASL works on **9096/9097/9098**
 - [ ] [configs/client-scram.properties](../configs/client-scram.properties) points at `alice` (admin commands often use an admin user — for this lab, `alice` is fine if she has super user OR you use admin credentials)
 
 ---
@@ -44,6 +44,8 @@ ACLs only work when the broker enforces them.
 
 **What success looks like:** Broker starts; logs mention authorizer / StandardAuthorizer.
 
+> **Note for your `my-config/` cluster:** Your brokers already run with both PLAINTEXT and SASL listeners. Use the **SASL ports** (9096/9097/9098) for ACL commands with `--command-config`, and use the PLAINTEXT ports only for emergency troubleshooting.
+
 **First-time tip:** After this change, even `alice` cannot produce until you grant ACLs in Step 1 — that is expected.
 
 ---
@@ -54,7 +56,7 @@ ACLs only work when the broker enforces them.
 
 ```bat
 cd /d c:\Users\om\Desktop\KafKa\Day-9\labs\scripts
-grant-acls.bat localhost:9093
+grant-acls.bat localhost:9096
 ```
 
 (Only runs the grant part — read the script to see exact ACLs.)
@@ -63,7 +65,7 @@ grant-acls.bat localhost:9093
 
 ```bat
 cd /d %KAFKA_HOME%
-bin\windows\kafka-acls.bat --bootstrap-server localhost:9093 ^
+bin\windows\kafka-acls.bat --bootstrap-server localhost:9096 ^
   --command-config c:\Users\om\Desktop\KafKa\Day-9\labs\configs\client-scram.properties ^
   --add --allow-principal User:alice ^
   --operation Write --topic orders
@@ -82,7 +84,7 @@ Consumers need permission on **both** the topic and the **consumer group**.
 ### 2.1 Read permission on topic
 
 ```bat
-bin\windows\kafka-acls.bat --bootstrap-server localhost:9093 ^
+bin\windows\kafka-acls.bat --bootstrap-server localhost:9096 ^
   --command-config c:\Users\om\Desktop\KafKa\Day-9\labs\configs\client-scram.properties ^
   --add --allow-principal User:bob ^
   --operation Read --topic orders ^
@@ -92,7 +94,7 @@ bin\windows\kafka-acls.bat --bootstrap-server localhost:9093 ^
 ### 2.2 Describe permission on group (required Kafka 2.0+)
 
 ```bat
-bin\windows\kafka-acls.bat --bootstrap-server localhost:9093 ^
+bin\windows\kafka-acls.bat --bootstrap-server localhost:9096 ^
   --command-config c:\Users\om\Desktop\KafKa\Day-9\labs\configs\client-scram.properties ^
   --add --allow-principal User:bob ^
   --operation Describe --group billing-svc
@@ -112,7 +114,7 @@ For bob’s client tests, use a copy of `client-scram.properties` with `username
 ## Step 3 — List ACLs (verify they were stored)
 
 ```bat
-bin\windows\kafka-acls.bat --bootstrap-server localhost:9093 ^
+bin\windows\kafka-acls.bat --bootstrap-server localhost:9096 ^
   --command-config c:\Users\om\Desktop\KafKa\Day-9\labs\configs\client-scram.properties ^
   --list --topic orders
 ```
@@ -134,17 +136,13 @@ Use separate config files or edit JAAS username/password per user.
 ### Example — alice produces
 
 ```bat
-bin\windows\kafka-console-producer.bat --bootstrap-server localhost:9093 ^
-  --producer.config c:\Users\om\Desktop\KafKa\Day-9\labs\configs\client-scram.properties ^
-  --topic orders
+bin\windows\kafka-console-producer.bat --bootstrap-server localhost:9096,localhost:9097,localhost:9098 --command-config c:\Users\om\Desktop\KafKa\Day-9\labs\my-config\client-scram-oneshot.properties --topic orders
 ```
 
 ### Example — bob consumes
 
 ```bat
-bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9093 ^
-  --consumer.config c:\path\to\client-bob.properties ^
-  --topic orders --group billing-svc
+bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9096,localhost:9097,localhost:9098 --command-config c:\path\to\client-bob.properties --topic orders --group billing-svc
 ```
 
 **If bob gets `GroupAuthorizationException`:** You forgot **Describe** on group (Step 2.2).
@@ -154,18 +152,13 @@ bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9093 ^
 ## Step 5 — Revoke alice’s write permission
 
 ```bat
-bin\windows\kafka-acls.bat --bootstrap-server localhost:9093 ^
-  --command-config c:\Users\om\Desktop\KafKa\Day-9\labs\configs\client-scram.properties ^
-  --remove --allow-principal User:alice ^
-  --operation Write --topic orders
+bin\windows\kafka-acls.bat --bootstrap-server localhost:9096 --command-config c:\Users\om\Desktop\KafKa\Day-9\labs\my-config\client-scram-oneshot.properties --remove --allow-principal User:alice --operation Write --topic orders
 ```
 
 Confirm removal:
 
 ```bat
-bin\windows\kafka-acls.bat --bootstrap-server localhost:9093 ^
-  --command-config c:\Users\om\Desktop\KafKa\Day-9\labs\configs\client-scram.properties ^
-  --list --topic orders
+bin\windows\kafka-acls.bat --bootstrap-server localhost:9096 --command-config c:\Users\om\Desktop\KafKa\Day-9\labs\my-config\client-scram-oneshot.properties --list --topic orders
 ```
 
 Try producing as **alice** again.
@@ -194,11 +187,14 @@ Try producing as **alice** again.
 
 ## Troubleshooting
 
+See [TROUBLESHOOTING.md](../TROUBLESHOOTING.md)
+
 | Symptom | Fix |
 |---------|-----|
 | All users denied | Grant ACLs as `admin` super user; check `super.users=User:admin` |
-| `kafka-acls` auth fails | Use `--command-config` with a user that can describe ACLs (admin) |
-| Consumer works without group ACL | Old broker setting — ensure authorizer enabled and restarted |
+| `kafka-acls` auth fails | Use SASL port **9096** + `--command-config` |
+| Used port 9093 | Controller port — use **9096/9097/9098** |
+| Consumer works without group ACL | Ensure authorizer enabled and broker restarted |
 | `--remove` says no ACL | Principal or operation typo — run `--list` first |
 
 ---

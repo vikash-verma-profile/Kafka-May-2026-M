@@ -28,7 +28,7 @@
 
 ## Step 0 — Start the 3-broker cluster
 
-Use your course script, e.g. `start-kafka-cluster.bat`, or start three brokers with different `broker.id` and `listeners`.
+Use [my-config/README.md](../my-config/README.md): controller + `broker-1` / `broker-2` / `broker-3` properties.
 
 **Verify all brokers registered:**
 
@@ -85,7 +85,7 @@ Open a dedicated terminal — leave it running **5+ minutes**.
 cd /d %KAFKA_HOME%
 bin\windows\kafka-producer-perf-test.bat --topic drill-orders ^
   --num-records 1000000 --record-size 256 --throughput 1000 ^
-  --producer-props acks=all enable.idempotence=true bootstrap.servers=localhost:9092,localhost:9094,localhost:9095
+  --producer-props acks=all enable.idempotence=true bootstrap.servers=localhost:9092,localhost:9094,localhost:9095,localhost:9094,localhost:9095
 ```
 
 **What these flags mean:**

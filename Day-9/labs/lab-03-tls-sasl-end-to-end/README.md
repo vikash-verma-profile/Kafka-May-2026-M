@@ -23,9 +23,12 @@ This lab uses a **self-signed** certificate — fine for training; production us
 
 ## Before you start — checklist
 
+- [ ] Labs 01–02 complete (SCRAM on **9096/9097/9098**)
 - [ ] `keytool` works: `keytool` (comes with JDK) — run in CMD and see help text
 - [ ] Broker stopped (you will change listeners and SSL paths)
 - [ ] A folder for certs, e.g. `C:\kafka-config\` (create it if missing)
+
+> **3-broker note:** In production you enable **SASL_SSL on every broker** that can be a partition leader (same rule as SASL_PLAINTEXT in Lab 01). This lab shows TLS on one broker first; then replicate listener + cert paths to `broker-2` and `broker-3` if you use RF=3.
 
 ---
 
@@ -75,10 +78,11 @@ keytool -import -alias ca -file kafka.crt -keystore kafka.truststore.jks -storep
 ## Step 3 — Configure broker `server.properties`
 
 1. Stop the broker.
-2. Set listener to **SASL_SSL** only on 9093 (lab simplification):
+2. Set listener to **SASL_SSL** (example port **9099** on broker-1 — pick unused ports per broker):
 
    ```properties
-   listeners=SASL_SSL://:9093
+   listeners=SASL_SSL://:9099,PLAINTEXT://:9092
+   advertised.listeners=SASL_SSL://localhost:9099,PLAINTEXT://localhost:9092
    listener.security.protocol.map=SASL_SSL:SASL_SSL
    ssl.keystore.location=C:/kafka-config/kafka.keystore.jks
    ssl.keystore.password=changeit

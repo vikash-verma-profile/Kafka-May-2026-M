@@ -55,16 +55,16 @@ Match [../configs/client-scram.properties](../configs/client-scram.properties).
 
 ## Lab 01 — SCRAM producer
 
-**When:** After broker listens on SASL **9093** — [Lab 01 README](../lab-01-sasl-scram-authentication/README.md).
+**When:** After cluster is running with SASL on **9096** — [Lab 01 README](../lab-01-sasl-scram-authentication/README.md) and [my-config/README](../my-config/README.md).
 
 ```bat
 cd c:\Users\om\Desktop\KafKa\Day-9\labs\java-security-lab
-mvn -q exec:java -Dexec.mainClass=day9.labs.Lab01ScramProducer -Dexec.args="localhost:9093 orders alice secret"
+mvn -q exec:java -Dexec.mainClass=day9.labs.Lab01ScramProducer -Dexec.args="localhost:9096 orders alice secret"
 ```
 
 | Argument | Default | Meaning |
 |----------|---------|---------|
-| bootstrap | `localhost:9093` | SASL listener |
+| bootstrap | `localhost:9093` (env: `KAFKA_BOOTSTRAP`) | Use **9096** for this lab cluster |
 | topic | `orders` | Topic name |
 | username | `alice` | SCRAM user |
 | password | `secret` | SCRAM password |

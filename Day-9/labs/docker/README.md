@@ -10,7 +10,7 @@ Docker is an **optional shortcut** for the monitoring stack (Labs 04–06). You 
 
 | Lab | Component | Docker required? | Image / compose service | Native alternative |
 |-----|-----------|------------------|-------------------------|-------------------|
-| 01–03 | Kafka broker + SCRAM/TLS | **No** | — | `%KAFKA_HOME%` |
+| 01–03 | Kafka broker + SCRAM/TLS | **No** | — | [my-config/](../my-config/) on host |
 | 01, 05 | Java / Python clients | **No** | — | [java-security-lab](../java-security-lab/), [python-security-lab](../python-security-lab/) |
 | **04** | **Prometheus** | **Optional** | `prometheus` in [docker-compose.yml](docker-compose.yml) | [prometheus.io download](https://prometheus.io/download/) |
 | **04** | jmx_exporter | **No** | — | Java agent JAR on broker ([Lab 04](../lab-04-jmx-prometheus/README.md)) |

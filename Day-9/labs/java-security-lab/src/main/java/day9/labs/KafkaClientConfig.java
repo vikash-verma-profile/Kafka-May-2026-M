@@ -14,7 +14,7 @@ public final class KafkaClientConfig {
 
   public static String defaultBootstrap() {
     String env = System.getenv("KAFKA_BOOTSTRAP");
-    return env != null && !env.isBlank() ? env : "localhost:9093";
+    return env != null && !env.isBlank() ? env : "localhost:9096";
   }
 
   public static Properties scramProducerProperties(
